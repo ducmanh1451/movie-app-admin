@@ -17,18 +17,20 @@ const { locale } = useI18n()
 
 const languages: LanguageMap = {
   english: 'English',
-  spanish: 'Spanish',
-  brazilian_portuguese: 'Português',
-  simplified_chinese: 'Simplified Chinese',
-  persian: 'Persian',
+  // spanish: 'Spanish',
+  // brazilian_portuguese: 'Português',
+  // simplified_chinese: 'Simplified Chinese',
+  // persian: 'Persian',
+  vietnam: 'Vietnam',
 }
 
 const languageCodes: LanguageMap = {
   gb: languages.english,
-  es: languages.spanish,
-  br: languages.brazilian_portuguese,
-  cn: languages.simplified_chinese,
-  ir: languages.persian,
+  // es: languages.spanish,
+  // br: languages.brazilian_portuguese,
+  // cn: languages.simplified_chinese,
+  // ir: languages.persian,
+  vn: languages.vietnam,
 }
 
 const languageName: LanguageMap = Object.fromEntries(Object.entries(languageCodes).map(([key, value]) => [value, key]))

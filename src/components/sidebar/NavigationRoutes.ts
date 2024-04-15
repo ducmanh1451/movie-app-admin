@@ -25,6 +25,15 @@ export default {
         icon: 'group',
       },
     },
+    // custom
+    {
+      name: 'movies',
+      displayName: 'menu.movies',
+      meta: {
+        icon: 'movie',
+      },
+    },
+    // end
     {
       name: 'projects',
       displayName: 'menu.projects',
