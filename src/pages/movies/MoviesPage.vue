@@ -13,7 +13,7 @@ const { isLoading, movies, pagination } = useMovies()
         <div class="flex flex-col md:flex-row gap-2 justify-start"></div>
         <VaButton icon="add">Movie</VaButton>
       </div>
-      <MovieTable :movies="movies" :loading="isLoading" :pagination="pagination" />
+      <MovieTable v-model:pagination="pagination" :movies="movies" :loading="isLoading" />
     </VaCardContent>
   </VaCard>
 </template>

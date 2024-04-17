@@ -1,20 +1,41 @@
-import { ref } from 'vue'
-import { getMovies, Pagination } from '../../../data/pages/movies'
+import { Ref, ref, unref } from 'vue'
+import {
+  getMovies,
+  // addProject,
+  // updateProject,
+  // removeProject,
+  // Sorting,
+  Pagination,
+} from '../../../data/pages/movies'
 
 import { Movie } from '../types'
+import { watchIgnorable } from '@vueuse/core'
 
-export const useMovies = (pageNumber = 1) => {
+const makePaginationRef = () => ref<Pagination>({ page: 1, perPage: 2, total: 0 })
+
+export const useMovies = (options?: { pagination?: Ref<Pagination> }) => {
   const isLoading = ref(false)
   const movies = ref<Movie[]>([])
-  const pagination = ref<Pagination>({ pageNumber: 1, recordInPage: 2, totalRecord: 0, totalPages: 0 })
+
+  const { pagination = makePaginationRef() } = options ?? {}
 
   const fetch = async () => {
     isLoading.value = true
-    const { data, pagination: newPagination } = await getMovies(pageNumber)
+    const { data, pagination: newPagination } = await getMovies({
+      ...unref(pagination),
+    })
+
     movies.value = data as Movie[]
-    pagination.value = newPagination as Pagination
+
+    ignoreUpdates(() => {
+      pagination.value = newPagination
+    })
+
     isLoading.value = false
   }
+
+  const { ignoreUpdates } = watchIgnorable([pagination], fetch, { deep: true })
+
   fetch()
   return {
     isLoading,

@@ -1,13 +1,18 @@
 <script setup lang="ts">
-import { PropType } from 'vue'
 import { defineVaDataTableColumns } from 'vuestic-ui'
+import { PropType, computed } from 'vue'
 import { Movie } from '../types'
-import { Pagination } from '../../../data/pages/movies'
+import { Pagination } from '../../../data/pages/projects'
 
-// import { ref, computed, watchEffect } from "vue";
-// import { useMovies } from '../composables/useMovies'
+const columns = defineVaDataTableColumns([
+  { label: 'Movie name', key: 'movie_name', sortable: true },
+  { label: 'Genre', key: 'genre', sortable: true },
+  { label: 'Director', key: 'director', sortable: true },
+  { label: 'Actors', key: 'actors', sortable: true },
+  { label: 'Creation Date', key: 'creation_date', sortable: true },
+])
 
-defineProps({
+const props = defineProps({
   movies: {
     type: Array as PropType<Movie[]>,
     required: true,
@@ -21,40 +26,42 @@ defineProps({
     required: true,
   },
 })
-
-// const filter = ref("");
-// const filtered = ref([]);
-
-const columns = defineVaDataTableColumns([
-  { label: 'Movie name', key: 'movie_name', sortable: true },
-  { label: 'Genre', key: 'genre', sortable: true },
-  { label: 'Director', key: 'director', sortable: true },
-  { label: 'Actors', key: 'actors', sortable: true },
-  { label: 'Creation Date', key: 'creation_date', sortable: true },
-])
-
-// const value = ref(3)
-// const currentPage = ref(1)
-// const totalPages = ref(0)
-// watchEffect(() => {
-// useMovies(props.pagination.pageNumber)
-// console.log(props.pagination.pageNumber);
-
-// const { isLoading, movies, pagination } = useMovies()
-// debugger
-// })
+const totalPages = computed(() => Math.ceil(props.pagination.total / props.pagination.perPage))
 </script>
 
 <template>
-  <VaDataTable :items="movies" :loading="loading" :columns="columns" striped> </VaDataTable>
-  <VaPagination
-    v-model="$props.pagination.pageNumber"
-    :pages="$props.pagination.totalPages"
-    :visible-pages="3"
-    buttons-preset="secondary"
-    rounded
-    gapped
-    border-color="primary"
-    class="justify-center sm:justify-start py-2"
-  />
+  <VaDataTable :loading="loading" :items="movies" :columns="columns" striped> </VaDataTable>
+  <div class="flex flex-col-reverse md:flex-row gap-2 justify-between items-center py-2">
+    <div>
+      <b>{{ $props.pagination.total }} results.</b>
+      Results per page
+      <VaSelect v-model="$props.pagination.perPage" class="!w-20" :options="[2, 3, 5]" />
+    </div>
+
+    <div v-if="totalPages > 1" class="flex">
+      <VaButton
+        preset="secondary"
+        icon="va-arrow-left"
+        aria-label="Previous page"
+        :disabled="$props.pagination.page === 1"
+        @click="$props.pagination.page--"
+      />
+      <VaButton
+        class="mr-2"
+        preset="secondary"
+        icon="va-arrow-right"
+        aria-label="Next page"
+        :disabled="$props.pagination.page === totalPages"
+        @click="$props.pagination.page++"
+      />
+      <VaPagination
+        v-model="$props.pagination.page"
+        buttons-preset="secondary"
+        :pages="totalPages"
+        :visible-pages="5"
+        :boundary-links="false"
+        :direction-links="false"
+      />
+    </div>
+  </div>
 </template>

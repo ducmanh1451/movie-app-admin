@@ -1,5 +1,4 @@
-import { sleep } from '../../services/utils'
-import moviesDb from './movies-db.json'
+import axios from 'axios'
 
 // Simulate API calls
 export type Movie = {
@@ -12,30 +11,29 @@ export type Movie = {
   creation_date: string
 }
 export type Pagination = {
-  pageNumber: number
-  recordInPage: number
-  totalRecord: number
-  totalPages: number
+  page: number
+  perPage: number
+  total: number
 }
 
 // get movies by page number
-// return movie (array), pagination (object)
-export const getMovies = async (pageNumber = 1): Promise<{ data: Movie[]; pagination: Pagination }> => {
-  await sleep(1000)
+export const getMovies = async (options: Pagination) => {
+  try {
+    const response = await axios.get(`http://localhost:8000/api/v1/movie`)
+    const data = response.data.payload
+    const normalizedMovies = data.slice((options.page - 1) * options.perPage, options.page * options.perPage)
+    const totalRecord = data.length
 
-  const movies = moviesDb.map((movie) => ({
-    ...movie,
-  }))
-  const normalizedMovies = movies.slice((pageNumber - 1) * 2, pageNumber * 2)
-  const totalRecord = movies.length
-  const totalPages = Math.floor(totalRecord / 2) + (totalRecord % 2 === 0 ? 0 : 1)
-  return {
-    data: normalizedMovies,
-    pagination: {
-      pageNumber: pageNumber,
-      recordInPage: 2,
-      totalRecord: totalRecord,
-      totalPages: totalPages,
-    },
+    return {
+      data: normalizedMovies,
+      pagination: {
+        page: options.page,
+        perPage: options.perPage,
+        total: totalRecord,
+      },
+    }
+  } catch (error) {
+    console.error('Error fetching movies:', error)
+    throw error
   }
 }
