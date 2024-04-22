@@ -1,18 +1,12 @@
 import { Ref, ref, unref } from 'vue'
-import {
-  getMovies,
-  // addProject,
-  // updateProject,
-  // removeProject,
-  // Sorting,
-  Pagination,
-} from '../../../data/pages/movies'
-
-import { Movie } from '../types'
+import { getMovies, addMovie, updateMovie, removeMovie } from '../../../data/pages/movies'
+import { Movie, Pagination } from '../types'
 import { watchIgnorable } from '@vueuse/core'
 
-const makePaginationRef = () => ref<Pagination>({ page: 1, perPage: 2, total: 0 })
+// default pagination
+const makePaginationRef = () => ref<Pagination>({ page: 1, perPage: 10, total: 0 })
 
+// declare hook
 export const useMovies = (options?: { pagination?: Ref<Pagination> }) => {
   const isLoading = ref(false)
   const movies = ref<Movie[]>([])
@@ -41,5 +35,30 @@ export const useMovies = (options?: { pagination?: Ref<Pagination> }) => {
     isLoading,
     movies,
     pagination,
+    async add(movie: Omit<Movie, '_id'>) {
+      isLoading.value = true
+      await addMovie({
+        ...movie,
+      })
+      await fetch()
+      isLoading.value = false
+    },
+    async update(movie: Movie) {
+      isLoading.value = true
+      await updateMovie({
+        ...movie,
+      })
+      await fetch()
+      isLoading.value = false
+    },
+
+    async remove(movie: Movie) {
+      isLoading.value = true
+      await removeMovie({
+        ...movie,
+      })
+      await fetch()
+      isLoading.value = false
+    },
   }
 }

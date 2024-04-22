@@ -174,5 +174,37 @@
   "buttonSelect": {
     "dark": "Tối",
     "light": "Sáng"
+  },
+
+  "common": {
+    "buttonCreateNew": "Thêm mới",
+    "totalRecord": "Bản ghi",
+    "perPage": "Số bản ghi trên 1 trang",
+    "buttonCancel": "Hủy",
+    "buttonSave": "Lưu",
+    "messageCreateSuccess": "Tạo mới thành công!",
+    "messageUpdateSuccess": "Cập nhật thành công!",
+    "messageDeleteSuccess": "Xóa thành công!",
+    "messageErrorSystem": "Lỗi hệ thống!",
+    "messageRequired": "Trường này bắt buộc nhập",
+    "messageConfirmDelete": "Bạn muốn xóa bản ghi này ?",
+    "confirm": "Xác nhận",
+    "buttonDelete": "Xóa"
+  },
+  "movies": {
+    "pageTitle": "Phim",
+    "movieName": "Tên phim",
+    "genre": "Thể loại",
+    "director": "Đạo diễn",
+    "actors": "Các diễn viên chính",
+    "rating": "Đánh giá",
+    "movieType": "Phân loại",
+    "poster": "Poster",
+    "content": "Nội dung",
+    "showingMovie": "Phim đang chiếu",
+    "upcomingMovie": "Phim sắp chiếu",
+    "popupCreateTitle": "Thêm mới phim",
+    "popupUpdateTitle": "Chỉnh sửa phim"
   }
+
 }
