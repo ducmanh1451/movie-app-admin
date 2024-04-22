@@ -55,6 +55,7 @@
     "faq": "Câu hỏi thường gặp",
     "users": "Người dùng",
     "movies": "Phim",
+    "cinemas": "Rạp",
     "projects": "Dự án"
   },
   "messages": {
@@ -187,6 +188,7 @@
     "messageDeleteSuccess": "Xóa thành công!",
     "messageErrorSystem": "Lỗi hệ thống!",
     "messageRequired": "Trường này bắt buộc nhập",
+    "messageValidatePhoneNumber": "Không đúng định dạng",
     "messageConfirmDelete": "Bạn muốn xóa bản ghi này ?",
     "confirm": "Xác nhận",
     "buttonDelete": "Xóa"
@@ -205,5 +207,15 @@
     "upcomingMovie": "Phim sắp chiếu",
     "popupCreateTitle": "Thêm mới phim",
     "popupUpdateTitle": "Chỉnh sửa phim"
+  },
+  "cinemas": {
+    "pageTitle": "Rạp",
+    "cinemaName": "Tên rạp",
+    "address": "Địa chỉ",
+    "phoneNumber": "Số điện thoại",
+    "district": "Quận",
+    "city": "Thành phố",
+    "popupCreateTitle": "Thêm mới rạp",
+    "popupUpdateTitle": "Chỉnh sửa rạp"
   }
 }

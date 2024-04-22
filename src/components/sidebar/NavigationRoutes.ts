@@ -33,6 +33,13 @@ export default {
         icon: 'movie',
       },
     },
+    {
+      name: 'cinemas',
+      displayName: 'menu.cinemas',
+      meta: {
+        icon: 'house',
+      },
+    },
     // end
     {
       name: 'projects',
