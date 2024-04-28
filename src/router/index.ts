@@ -47,6 +47,28 @@ const routes: Array<RouteRecordRaw> = [
         path: 'cinemas',
         component: () => import('../pages/cinemas/CinemasPage.vue'),
       },
+      {
+        name: 'movie-rooms',
+        path: '/movie-rooms',
+        component: RouteViewComponent,
+        children: [
+          {
+            name: 'list-movie-rooms',
+            path: 'list-movie-rooms',
+            component: () => import('../pages/movie-rooms/MovieRoomsPage.vue'),
+          },
+          {
+            name: 'create-movie-room',
+            path: 'create-movie-room',
+            component: () => import('../pages/movie-rooms/CreateMovieRoomPage.vue'),
+          },
+          {
+            name: 'update-movie-room',
+            path: 'update-movie-room',
+            component: () => import('../pages/movie-rooms/UpdateMovieRoomPage.vue'),
+          },
+        ],
+      },
 
       // end
       {

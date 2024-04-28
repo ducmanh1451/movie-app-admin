@@ -40,7 +40,29 @@ export default {
         icon: 'house',
       },
     },
+    {
+      name: 'movie-rooms',
+      displayName: 'menu.movie-rooms',
+      meta: {
+        icon: 'class',
+      },
+      children: [
+        {
+          name: 'list-movie-rooms',
+          displayName: 'menu.list-movie-rooms',
+        },
+        {
+          name: 'create-movie-room',
+          displayName: 'menu.create-movie-room',
+        },
+        {
+          name: 'update-movie-room',
+          displayName: 'menu.update-movie-room',
+        },
+      ],
+    },
     // end
+
     {
       name: 'projects',
       displayName: 'menu.projects',

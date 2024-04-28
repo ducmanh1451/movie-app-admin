@@ -18,7 +18,7 @@ body {
 
 // css popup
 .va-modal h1,
-.va-modal .item {
+.item {
   padding: 0 5px;
 }
 

@@ -88,4 +88,8 @@ const onCloseSidebarButtonClick = () => {
   width: unset !important;
   min-width: unset !important;
 }
+.max-w-7xl {
+  margin: 0px;
+  max-width: 100%;
+}
 </style>

@@ -56,6 +56,12 @@
     "users": "Người dùng",
     "movies": "Phim",
     "cinemas": "Rạp",
+    "movie-rooms": "Phòng chiếu phim",
+    "list-movie-rooms": "Danh sách phòng chiếu phim",
+    "create-movie-room": "Tạo phòng chiếu phim",
+    "update-movie-room": "Chỉnh sửa phòng chiếu phim",
+
+    
     "projects": "Dự án"
   },
   "messages": {
@@ -191,7 +197,7 @@
     "messageValidatePhoneNumber": "Không đúng định dạng",
     "messageConfirmDelete": "Bạn muốn xóa bản ghi này ?",
     "confirm": "Xác nhận",
-    "buttonDelete": "Xóa"
+    "buttonDelete": "Xóa"  
   },
   "movies": {
     "pageTitle": "Phim",
@@ -217,5 +223,15 @@
     "city": "Thành phố",
     "popupCreateTitle": "Thêm mới rạp",
     "popupUpdateTitle": "Chỉnh sửa rạp"
+  },
+  "movieRooms": {
+    "cinemas": "Rạp",
+    "roomName": "Tên phòng chiếu",
+    "row": "Số hàng",
+    "column": "Số cột",
+    "seatTypes": "Loại ghế",
+    "buttonSelectType": "Chọn",
+    "messageCheckTypeSeat": "Kiểm tra lại loại ghế cần chọn",
+    "messageCheckMaxNumber": "Vui lòng nhập số dương và nhỏ hơn hoặc bằng 12"
   }
 }
