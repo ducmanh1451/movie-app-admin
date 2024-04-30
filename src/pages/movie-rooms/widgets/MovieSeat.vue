@@ -57,7 +57,7 @@ const props = defineProps({
     type: [Number, String],
     default: 0,
   },
-  initialSeats: {
+  initSeats: {
     type: Array,
     default: () => [],
   },
@@ -104,8 +104,8 @@ const generateSeats = (rows: number, columns: number) => {
   typeof columns === 'string' ? parseInt(columns) : columns
   let seatsArray = []
   // if mode is update
-  if (props.initialSeats.length > 0) {
-    seatsArray = props.initialSeats
+  if (props.initSeats.length > 0) {
+    seatsArray = props.initSeats
     return seatsArray
   }
   // if mode is create

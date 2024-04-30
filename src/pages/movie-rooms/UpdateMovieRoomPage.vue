@@ -108,7 +108,7 @@ const saveMovieRoom = async () => {
           <MovieSeat
             :rows="movieRoom.rows"
             :columns="movieRoom.columns"
-            :seats="movieRoom.seats"
+            :init-seats="movieRoom.seats"
             @updateSeats="handleUpdateSeats"
           ></MovieSeat>
         </div>
