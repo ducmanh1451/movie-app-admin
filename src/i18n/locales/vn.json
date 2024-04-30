@@ -60,8 +60,6 @@
     "list-movie-rooms": "Danh sách phòng chiếu phim",
     "create-movie-room": "Tạo phòng chiếu phim",
     "update-movie-room": "Chỉnh sửa phòng chiếu phim",
-
-    
     "projects": "Dự án"
   },
   "messages": {
@@ -197,7 +195,7 @@
     "messageValidatePhoneNumber": "Không đúng định dạng",
     "messageConfirmDelete": "Bạn muốn xóa bản ghi này ?",
     "confirm": "Xác nhận",
-    "buttonDelete": "Xóa"  
+    "buttonDelete": "Xóa"
   },
   "movies": {
     "pageTitle": "Phim",

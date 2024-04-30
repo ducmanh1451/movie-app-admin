@@ -57,6 +57,10 @@ const props = defineProps({
     type: [Number, String],
     default: 0,
   },
+  initialSeats: {
+    type: Array,
+    default: () => [],
+  },
 })
 // emits
 const emits = defineEmits(['updateSeats'])
@@ -94,16 +98,21 @@ const validateAndProceed = () => {
     updateType()
   }
 }
-
 // generate seat
 const generateSeats = (rows: number, columns: number) => {
   typeof rows === 'string' ? parseInt(rows) : rows
   typeof columns === 'string' ? parseInt(columns) : columns
-  const seats = []
+  let seatsArray = []
+  // if mode is update
+  if (props.initialSeats.length > 0) {
+    seatsArray = props.initialSeats
+    return seatsArray
+  }
+  // if mode is create
   if (rows > 0 && rows < 13 && columns > 0 && columns < 13) {
     const totalSeats = rows * columns
     for (let i = 0; i < totalSeats; i++) {
-      seats.push({
+      seatsArray.push({
         seat_id: i + 1,
         selected: false,
         type: 1, // gồm các loại: standard, vip, disable
@@ -112,13 +121,15 @@ const generateSeats = (rows: number, columns: number) => {
         price: typeSeatOptions.value[0]['seat_price'],
       })
     }
-    emits('updateSeats', seats)
+    emits('updateSeats', seatsArray)
   }
-  return seats
+  return seatsArray
 }
-const seats = ref(generateSeats(0 as number, 0 as number))
+// init
+const seats = ref<Array<any>>([])
+
 // watch
-watch([() => props.rows as number, () => props.columns as number, seats], () => {
+watch([() => props.rows as number, () => props.columns as number], () => {
   seats.value = generateSeats(props.rows as number, props.columns as number)
 })
 

@@ -5,18 +5,21 @@ import { Cinema } from '../cinemas/types'
 import axios from 'axios'
 import MovieSeat from '../movie-rooms/widgets/MovieSeat.vue'
 import { MovieRoom } from './types'
-import { addMovieRoom } from '../../data/pages/movie-rooms'
+import { useMovieRooms } from './composables/useMovieRooms'
 import { useToast } from 'vuestic-ui'
 import { useRouter } from 'vue-router'
 
 // language
 const { t } = useI18n()
+// hook
+const { add } = useMovieRooms()
 // router
 const router = useRouter()
 // declare
 const movieRoom = ref<MovieRoom>({
   _id: '',
   cinema_id: '',
+  cinema_name: '',
   room_name: '',
   rows: 0,
   columns: 0,
@@ -29,6 +32,7 @@ const columns = ref<number>(0)
 const loadingOption = ref(true)
 const loadingScreen = ref(false)
 const cinemasOptions = ref([])
+
 // notify
 const { init: notify } = useToast()
 // Modal error
@@ -68,7 +72,7 @@ const saveMovieRoom = async () => {
     }
     // process
     loadingScreen.value = true
-    await addMovieRoom(movieRoom.value)
+    await add(movieRoom.value as MovieRoom)
     loadingScreen.value = false
     // after create success => show notify and redirect to screen list data
     notify({
@@ -88,7 +92,9 @@ const handleUpdateSeats = (seats: any[]) => {
 }
 // watch
 watch([cinemaId, roomName, rows, columns], ([newCinemaId, newRoomName, newRow, newColumn]) => {
+  const selectedCinema = (cinemasOptions.value as any[]).find((cinema: any) => cinema.value === newCinemaId)
   movieRoom.value.cinema_id = newCinemaId
+  movieRoom.value.cinema_name = selectedCinema !== undefined ? selectedCinema.text : ''
   movieRoom.value.room_name = newRoomName
   movieRoom.value.rows = newRow
   movieRoom.value.columns = newColumn

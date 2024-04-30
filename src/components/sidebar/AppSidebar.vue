@@ -30,6 +30,7 @@
         <template #body>
           <div v-for="(childRoute, index2) in route.children" :key="index2">
             <VaSidebarItem
+              v-if="childRoute.isNotDisplayed != true"
               :to="{ name: childRoute.name }"
               :active="isActiveChildRoute(childRoute)"
               :active-color="activeColor"

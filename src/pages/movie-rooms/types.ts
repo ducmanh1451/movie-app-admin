@@ -1,6 +1,7 @@
 export type MovieRoom = {
   _id: string
   cinema_id: string
+  cinema_name: string
   room_name: string
   rows: number
   columns: number
@@ -13,4 +14,10 @@ export type MovieRoomSeat = {
   type: number
   available: boolean
   price: number
+}
+
+export type Pagination = {
+  page: number
+  perPage: number
+  total: number
 }

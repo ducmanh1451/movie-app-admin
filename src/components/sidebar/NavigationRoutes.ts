@@ -2,7 +2,8 @@ export interface INavigationRoute {
   name: string
   displayName: string
   meta: { icon: string }
-  children?: INavigationRoute[]
+  // children?: INavigationRoute[]
+  children?: (INavigationRoute & { isNotDisplayed?: boolean })[]
 }
 
 export default {
@@ -50,14 +51,17 @@ export default {
         {
           name: 'list-movie-rooms',
           displayName: 'menu.list-movie-rooms',
+          isNotDisplayed: false,
         },
         {
           name: 'create-movie-room',
           displayName: 'menu.create-movie-room',
+          isNotDisplayed: false,
         },
         {
           name: 'update-movie-room',
           displayName: 'menu.update-movie-room',
+          isNotDisplayed: true,
         },
       ],
     },
@@ -80,14 +84,17 @@ export default {
         {
           name: 'payment-methods',
           displayName: 'menu.payment-methods',
+          isNotDisplayed: false,
         },
         {
           name: 'pricing-plans',
           displayName: 'menu.pricing-plans',
+          isNotDisplayed: false,
         },
         {
           name: 'billing',
           displayName: 'menu.billing',
+          isNotDisplayed: false,
         },
       ],
     },
@@ -101,14 +108,17 @@ export default {
         {
           name: 'login',
           displayName: 'menu.login',
+          isNotDisplayed: false,
         },
         {
           name: 'signup',
           displayName: 'menu.signup',
+          isNotDisplayed: false,
         },
         {
           name: 'recover-password',
           displayName: 'menu.recover-password',
+          isNotDisplayed: false,
         },
       ],
     },

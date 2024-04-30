@@ -64,7 +64,7 @@ const routes: Array<RouteRecordRaw> = [
           },
           {
             name: 'update-movie-room',
-            path: 'update-movie-room',
+            path: 'update-movie-room/:_id',
             component: () => import('../pages/movie-rooms/UpdateMovieRoomPage.vue'),
           },
         ],
