@@ -10,7 +10,9 @@ export type MovieRoom = {
 
 export type MovieRoomSeat = {
   seat_id: number
-  selected: boolean
+  seat_name: string
+  row: number
+  column: number
   type: number
   available: boolean
   price: number

@@ -70,13 +70,32 @@ const typeSeatOptions = ref([])
 const type = ref()
 const updateType = () => {
   const selectedTypeValue = type.value
+  const selectedOption = typeSeatOptions.value.find((option: any) => option.seat_type_cd === selectedTypeValue)
+  const selectedOptionPrice = selectedOption ? selectedOption['seat_price'] : typeSeatOptions.value[0]['seat_price']
   const selectedSeats = seats.value.filter((seat) => seat.checked)
   selectedSeats.forEach((seat) => {
     seat.type = selectedTypeValue
     seat.checked = false
+    seat.price = selectedOptionPrice
   })
+
+  // updateSeatNames()
+  // console.log(seats.value);
   emits('updateSeats', seats.value)
 }
+
+// const updateSeatNames = () => {
+//   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+//   seats.value.forEach((seat, index) => {
+//     if (seat.type === 3) { // Nếu là ghế bị vô hiệu hóa
+//       seat.seat_name = ''; // Đặt tên của ghế là trống
+//     } else { // Nếu không, đặt tên theo yêu cầu
+//       const rowChar = alphabet.charAt(seat.row-1); // Lấy kí tự tương ứng với hàng
+//       const seatNumber = seat.column; // Số ghế là số cột + 1
+//       seat.seat_name = rowChar + seatNumber; // Đặt tên của ghế
+//     }
+//   });
+// };
 
 // get seat type from database
 onMounted(async () => {
@@ -110,17 +129,34 @@ const generateSeats = (rows: number, columns: number) => {
   }
   // if mode is create
   if (rows > 0 && rows < 13 && columns > 0 && columns < 13) {
-    const totalSeats = rows * columns
-    for (let i = 0; i < totalSeats; i++) {
-      seatsArray.push({
-        seat_id: i + 1,
-        selected: false,
-        type: 1, // gồm các loại: standard, vip, disable
-        checked: false,
-        available: true,
-        price: typeSeatOptions.value[0]['seat_price'],
-      })
+    // const totalSeats = rows * columns
+    // for (let i = 0; i < totalSeats; i++) {
+    //   seatsArray.push({
+    //     seat_id: i + 1,
+    //     seat_name: '',
+    //     // selected: false,
+    //     type: 1, // gồm các loại: standard, vip, disable
+    //     checked: false,
+    //     available: true,
+    //     price: typeSeatOptions.value[0]['seat_price'],
+    //   })
+    // }
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < columns; col++) {
+        const seat_id = row * columns + col + 1
+        seatsArray.push({
+          seat_id: seat_id,
+          seat_name: '',
+          row: row + 1,
+          column: col + 1,
+          type: 1, // gồm các loại: standard, vip, disable
+          checked: false,
+          available: true,
+          price: typeSeatOptions.value[0]['seat_price'],
+        })
+      }
     }
+
     emits('updateSeats', seatsArray)
   }
   return seatsArray
