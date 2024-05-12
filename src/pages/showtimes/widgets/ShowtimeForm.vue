@@ -249,7 +249,11 @@ const checkDuplicateShowtime = () => {
   newShowtimeDetail.value.opening_start_time = openingStartTime
   newShowtimeDetail.value.opening_end_time = openingEndTime
   // validate
-  const filterItems = items.filter((row: any) => row.movie_id === newShowtimeDetail.value.movie_id)
+  const filterItems = items.filter(
+    (row: any) =>
+      newShowtimeDetail.value.opening_date != undefined &&
+      new Date(row.opening_date).getTime() === newShowtimeDetail.value.opening_date.getTime(),
+  )
   let hasError = 0
   filterItems.forEach((row: any) => {
     if (
