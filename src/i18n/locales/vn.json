@@ -60,6 +60,7 @@
     "list-movie-rooms": "Danh sách phòng chiếu phim",
     "create-movie-room": "Tạo phòng chiếu phim",
     "update-movie-room": "Chỉnh sửa phòng chiếu phim",
+    "showtimes": "Lịch chiếu phim",
     "projects": "Dự án"
   },
   "messages": {
@@ -194,6 +195,8 @@
     "messageRequired": "Trường này bắt buộc nhập",
     "messageValidatePhoneNumber": "Không đúng định dạng",
     "messageConfirmDelete": "Bạn muốn xóa bản ghi này ?",
+    "messageDateGreaterCurrent": "Vui lòng chọn ngày lớn hơn ngày hiện tại.",
+    "messageDateToGreaterDateFrom": "Vui lòng chọn ngày kết thúc lớn hơn ngày bắt đầu.",
     "confirm": "Xác nhận",
     "buttonDelete": "Xóa"
   },
@@ -205,6 +208,12 @@
     "actors": "Các diễn viên chính",
     "rating": "Đánh giá",
     "movieType": "Phân loại",
+    "expectedStartDate": "Ngày dự kiến bắt đầu",
+    "expectedEndDate": "Ngày dự kiến kết thúc",
+    "movieDuration": "Thời lượng phim",
+    "opening_date": "Ngày dự kiến mở bán",
+    "opening_start_time": "Thời gian bắt đầu chiếu",
+    "opening_end_time": "Thời gian kết thúc chiếu",
     "poster": "Poster",
     "content": "Nội dung",
     "showingMovie": "Phim đang chiếu",
@@ -231,5 +240,13 @@
     "buttonSelectType": "Chọn",
     "messageCheckTypeSeat": "Kiểm tra lại loại ghế cần chọn",
     "messageCheckMaxNumber": "Vui lòng nhập số dương và nhỏ hơn hoặc bằng 12"
+  },
+  "showtimes": {
+    "pageTitle": "Lịch chiếu phim",
+    "popupCreateTitle": "Thêm mới lịch chiếu",
+    "popupUpdateTitle": "Chỉnh sửa lịch chiếu",
+    "startDateTime": "Thời gian bắt đầu",
+    "endDateTime": "Thời gian kết thúc",
+    "countShowtimeDetail": "Số lịch chiếu"
   }
 }

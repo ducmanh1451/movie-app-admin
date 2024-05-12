@@ -1,31 +1,24 @@
 <script setup lang="ts">
 import { defineVaDataTableColumns } from 'vuestic-ui'
 import { PropType, computed } from 'vue'
-import { Movie, Pagination } from '../types'
+import { Showtime, Pagination } from '../types'
 import { useI18n } from 'vue-i18n'
 
 // language
 const { t } = useI18n()
 // define columns
 const columns = defineVaDataTableColumns([
-  { label: t('movies.movieName'), key: 'movie_name', thAlign: 'center', tdAlign: 'left' },
-  { label: t('movies.genre'), key: 'genre', thAlign: 'center', tdAlign: 'left' },
-  { label: t('movies.director'), key: 'director', thAlign: 'center', tdAlign: 'left' },
-  { label: t('movies.actors'), key: 'actors', thAlign: 'center', tdAlign: 'left' },
-  { label: t('movies.rating'), key: 'rating', thAlign: 'center', tdAlign: 'right' },
-  { label: t('movies.movieType'), key: 'movie_type', thAlign: 'center', tdAlign: 'left' },
-
-  { label: t('movies.expectedStartDate'), key: 'expected_start_date', thAlign: 'center', tdAlign: 'center' },
-  { label: t('movies.expectedEndDate'), key: 'expected_end_date', thAlign: 'center', tdAlign: 'center' },
-
+  { label: t('cinemas.cinemaName'), key: 'cinema_name', thAlign: 'center', tdAlign: 'left' },
+  { label: t('movieRooms.roomName'), key: 'room_name', thAlign: 'center', tdAlign: 'left' },
+  { label: t('showtimes.countShowtimeDetail'), key: 'count', thAlign: 'center', tdAlign: 'center' },
   { label: ' ', key: 'actions' },
 ])
 // emits
 const emits = defineEmits(['edit', 'delete'])
 // props
 const props = defineProps({
-  movies: {
-    type: Array as PropType<Movie[]>,
+  showtimes: {
+    type: Array as PropType<Showtime[]>,
     required: true,
   },
   loading: {
@@ -42,33 +35,24 @@ const totalPages = computed(() => Math.ceil(props.pagination.total / props.pagin
 </script>
 
 <template>
-  <VaDataTable :loading="loading" :items="movies" :columns="columns" striped>
-    <template #cell(movie_type)="{ value }">
-      <span>{{ value == '0' ? t('movies.upcomingMovie') : t('movies.showingMovie') }}</span>
-    </template>
-    <template #cell(expected_start_date)="{ value }">
-      <span>{{ new Date(value).toLocaleDateString('en-GB') }}</span>
-    </template>
-    <template #cell(expected_end_date)="{ value }">
-      <span>{{ new Date(value).toLocaleDateString('en-GB') }}</span>
-    </template>
-    <template #cell(actions)="{ rowData: movie }">
+  <VaDataTable :loading="loading" :items="showtimes" :columns="columns" striped>
+    <template #cell(actions)="{ rowData: showtime }">
       <div class="flex gap-2 justify-end">
         <VaButton
           preset="primary"
           size="small"
           color="primary"
           icon="mso-edit"
-          aria-label="Edit movie"
-          @click="emits('edit', movie as Movie)"
+          aria-label="Edit showtime"
+          @click="emits('edit', showtime as Showtime)"
         />
         <VaButton
           preset="primary"
           size="small"
           icon="mso-delete"
           color="danger"
-          aria-label="Delete movie"
-          @click="emits('delete', movie as Movie)"
+          aria-label="Delete showtime"
+          @click="emits('delete', showtime as Showtime)"
         />
       </div>
     </template>

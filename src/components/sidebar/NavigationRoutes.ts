@@ -65,6 +65,13 @@ export default {
         },
       ],
     },
+    {
+      name: 'showtimes',
+      displayName: 'menu.showtimes',
+      meta: {
+        icon: 'mi-calendar_today',
+      },
+    },
     // end
 
     {

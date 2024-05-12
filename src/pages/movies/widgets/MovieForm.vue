@@ -1,16 +1,24 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { EmptyMovie, Movie } from '../types'
 import { useI18n } from 'vue-i18n'
+import { getLibrary } from '../../../helpers/libraries'
+import { formatDateToDisplay } from '../../../helpers/date'
 
 // language
 const { t } = useI18n()
 // data selectbox genre
-const genreOptions = ['Hành động', 'Giả tưởng', 'Chính kịch']
+const genreOptions = ref([])
+// init data for selectbox genre
+onMounted(async () => {
+  const response = await getLibrary(2)
+  genreOptions.value = response.library.lib_details.map((item: any) => item.genre_nm)
+})
+
 // data selectbox movieType
 const movieTypesOptions = [
-  { value: 0, label: t('movies.upcomingMovie') },
-  { value: 1, label: t('movies.showingMovie') },
+  { value: 0, label: t('movies.upcomingMovie') }, // sắp chiếu
+  { value: 1, label: t('movies.showingMovie') }, // đang chiếu
 ]
 // props
 const props = defineProps<{
@@ -22,6 +30,13 @@ defineEmits<{
   (event: 'close'): void
 }>()
 // declare empty movie
+const maxVisibleOptions = 1
+const disabledStartDate = ref(false)
+const defaultStartDate = new Date()
+defaultStartDate.setDate(defaultStartDate.getDate())
+const defaultEndDate = new Date()
+defaultEndDate.setDate(defaultEndDate.getDate() + 14)
+
 const defaultNewMovie: EmptyMovie = {
   movie_name: '',
   genre: [],
@@ -29,9 +44,13 @@ const defaultNewMovie: EmptyMovie = {
   actors: [],
   rating: 0,
   movie_type: 0,
+  expected_start_date: defaultStartDate,
+  expected_end_date: defaultEndDate,
+  movie_duration: 0,
   poster: '',
   content: '',
 }
+
 const newMovie = ref({ ...defaultNewMovie })
 
 // start addActor and removeActor
@@ -58,6 +77,10 @@ watch(
     newMovie.value = {
       ...props.movie,
     }
+    // if mode is edit, and expected_start_date <= current_date => disabled expected_start_date
+    if (new Date(props.movie.expected_start_date) < defaultStartDate) {
+      disabledStartDate.value = true
+    }
   },
   { immediate: true },
 )
@@ -65,6 +88,22 @@ watch(
 // validate
 const requiredString = (v: string) => !!v || t('common.messageRequired')
 const requiredOption = (v: any) => ('length' in v && v.length > 0) || t('common.messageRequired')
+const ruleStartDate = (expected_start_date: any) => {
+  // if expected_start_date is disabled (movie is showing), dont need validate
+  if (disabledStartDate.value) {
+    return true
+  }
+  return expected_start_date <= defaultStartDate ? t('common.messageDateGreaterCurrent') : true
+}
+const ruleEndDate = (expected_end_date: any) => {
+  if (expected_end_date <= newMovie.value.expected_start_date) {
+    return t('common.messageDateToGreaterDateFrom')
+  } else if (expected_end_date <= defaultStartDate) {
+    return t('common.messageDateGreaterCurrent')
+  } else {
+    return true
+  }
+}
 </script>
 
 <template>
@@ -77,7 +116,7 @@ const requiredOption = (v: any) => ('length' in v && v.length > 0) || t('common.
       </div>
     </div>
     <div class="row">
-      <div class="flex flex-col md4">
+      <div class="flex flex-col md3">
         <div class="item">
           <VaSelect
             v-model="newMovie.genre"
@@ -85,15 +124,17 @@ const requiredOption = (v: any) => ('length' in v && v.length > 0) || t('common.
             :rules="[requiredOption]"
             :options="genreOptions"
             multiple
+            max-selections="3"
+            :max-visible-options="maxVisibleOptions"
           />
         </div>
       </div>
-      <div class="flex flex-col md4">
+      <div class="flex flex-col md3">
         <div class="item">
-          <VaInput v-model="newMovie.rating" :label="t('movies.rating')" />
+          <VaInput v-model="newMovie.rating" :label="t('movies.rating')" type="number" min="0" max="10" />
         </div>
       </div>
-      <div class="flex flex-col md4">
+      <div class="flex flex-col md3">
         <div class="item">
           <VaSelect
             v-model="newMovie.movie_type"
@@ -101,7 +142,36 @@ const requiredOption = (v: any) => ('length' in v && v.length > 0) || t('common.
             :options="movieTypesOptions"
             value-by="value"
             text-by="label"
+            disabled
           />
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="flex flex-col md3">
+        <div class="item">
+          <VaDateInput
+            v-model="newMovie.expected_start_date"
+            :label="t('movies.expectedStartDate')"
+            :format-date="formatDateToDisplay"
+            :rules="[ruleStartDate]"
+            :disabled="disabledStartDate"
+          />
+        </div>
+      </div>
+      <div class="flex flex-col md3">
+        <div class="item">
+          <VaDateInput
+            v-model="newMovie.expected_end_date"
+            :label="t('movies.expectedEndDate')"
+            :format-date="formatDateToDisplay"
+            :rules="[ruleEndDate]"
+          />
+        </div>
+      </div>
+      <div class="flex flex-col md3">
+        <div class="item">
+          <VaInput v-model="newMovie.movie_duration" :label="t('movies.movieDuration')" type="number" min="0" />
         </div>
       </div>
     </div>

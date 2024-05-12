@@ -15,6 +15,8 @@ const columns = defineVaDataTableColumns([
   { label: t('cinemas.city'), key: 'city', thAlign: 'center', tdAlign: 'left' },
   { label: ' ', key: 'actions' },
 ])
+// emits
+const emits = defineEmits(['edit', 'delete'])
 // props
 const props = defineProps({
   cinemas: {
@@ -44,7 +46,7 @@ const totalPages = computed(() => Math.ceil(props.pagination.total / props.pagin
           color="primary"
           icon="mso-edit"
           aria-label="Edit cinema"
-          @click="$emit('edit', cinema as Cinema)"
+          @click="emits('edit', cinema as Cinema)"
         />
         <VaButton
           preset="primary"
@@ -52,7 +54,7 @@ const totalPages = computed(() => Math.ceil(props.pagination.total / props.pagin
           icon="mso-delete"
           color="danger"
           aria-label="Delete cinema"
-          @click="$emit('delete', cinema as Cinema)"
+          @click="emits('delete', cinema as Cinema)"
         />
       </div>
     </template>
