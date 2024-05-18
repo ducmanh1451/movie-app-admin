@@ -38,14 +38,14 @@ export default {
       name: 'cinemas',
       displayName: 'menu.cinemas',
       meta: {
-        icon: 'house',
+        icon: 'theaters',
       },
     },
     {
       name: 'movie-rooms',
       displayName: 'menu.movie-rooms',
       meta: {
-        icon: 'class',
+        icon: 'meeting_room',
       },
       children: [
         {
@@ -69,7 +69,14 @@ export default {
       name: 'showtimes',
       displayName: 'menu.showtimes',
       meta: {
-        icon: 'mi-calendar_today',
+        icon: 'calendar_month',
+      },
+    },
+    {
+      name: 'booking',
+      displayName: 'menu.booking',
+      meta: {
+        icon: 'confirmation_number',
       },
     },
     // end

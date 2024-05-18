@@ -4,6 +4,7 @@ export type Showtime = {
   cinema_name: string
   room_id: string
   room_name: string
+  opening_date: Date | undefined
   showtime_detail: ShowtimeDetail[]
 }
 
@@ -12,6 +13,7 @@ export type EmptyShowtime = Omit<Showtime, '_id'> & {
   cinema_name: Showtime['cinema_name'] | undefined
   room_id: Showtime['room_id'] | undefined
   room_name: Showtime['room_name'] | undefined
+  opening_date: Showtime['opening_date'] | undefined
   showtime_detail: Showtime['showtime_detail'] | undefined
 }
 

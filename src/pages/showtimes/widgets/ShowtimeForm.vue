@@ -24,6 +24,8 @@ defineEmits<{
 }>()
 // disabled selectbox when edit
 const isModeEdit = ref(false)
+// disabled button save when opening_date <= current_date
+const isAllowEdit = ref(false)
 
 // declare empty showtime
 const defaultNewShowtime: EmptyShowtime = {
@@ -31,6 +33,7 @@ const defaultNewShowtime: EmptyShowtime = {
   cinema_name: '',
   room_id: '',
   room_name: '',
+  opening_date: undefined,
   showtime_detail: [],
 }
 const newShowtime = ref({ ...defaultNewShowtime })
@@ -321,6 +324,10 @@ watch(
 
     isModeEdit.value = true
 
+    if (newShowtime.value.opening_date != undefined && new Date(newShowtime.value.opening_date) <= new Date()) {
+      isAllowEdit.value = true
+    }
+
     await fetchDataMovieRooms(newShowtime.value.cinema_id)
 
     items.splice(0, items.length, ...newShowtime.value.showtime_detail)
@@ -467,7 +474,10 @@ watch(
         <VaButton preset="secondary" color="secondary" @click="$emit('close')">
           {{ t('common.buttonCancel') }}
         </VaButton>
-        <VaButton @click="validate() && checkExistsRowInTable() && $emit('save', newShowtime as Showtime)">
+        <VaButton
+          :disabled="isAllowEdit"
+          @click="validate() && checkExistsRowInTable() && $emit('save', newShowtime as Showtime)"
+        >
           {{ t('common.buttonSave') }}
         </VaButton>
       </div>

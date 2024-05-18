@@ -3,6 +3,7 @@ import { defineVaDataTableColumns } from 'vuestic-ui'
 import { PropType, computed } from 'vue'
 import { Showtime, Pagination } from '../types'
 import { useI18n } from 'vue-i18n'
+import { formatDateToDisplay } from '../../../helpers/date'
 
 // language
 const { t } = useI18n()
@@ -10,6 +11,7 @@ const { t } = useI18n()
 const columns = defineVaDataTableColumns([
   { label: t('cinemas.cinemaName'), key: 'cinema_name', thAlign: 'center', tdAlign: 'left' },
   { label: t('movieRooms.roomName'), key: 'room_name', thAlign: 'center', tdAlign: 'left' },
+  { label: t('movies.opening_date'), key: 'opening_date', thAlign: 'center', tdAlign: 'center' },
   { label: t('showtimes.countShowtimeDetail'), key: 'count', thAlign: 'center', tdAlign: 'center' },
   { label: ' ', key: 'actions' },
 ])
@@ -36,6 +38,9 @@ const totalPages = computed(() => Math.ceil(props.pagination.total / props.pagin
 
 <template>
   <VaDataTable :loading="loading" :items="showtimes" :columns="columns" striped>
+    <template #cell(opening_date)="{ value }">
+      {{ formatDateToDisplay(value) }}
+    </template>
     <template #cell(actions)="{ rowData: showtime }">
       <div class="flex gap-2 justify-end">
         <VaButton
@@ -52,6 +57,7 @@ const totalPages = computed(() => Math.ceil(props.pagination.total / props.pagin
           icon="mso-delete"
           color="danger"
           aria-label="Delete showtime"
+          :disabled="new Date(showtime['opening_date']) <= new Date()"
           @click="emits('delete', showtime as Showtime)"
         />
       </div>
