@@ -4,7 +4,6 @@ export type Showtime = {
   cinema_name: string
   room_id: string
   room_name: string
-  opening_date: Date | undefined
   showtime_detail: ShowtimeDetail[]
 }
 
@@ -13,7 +12,6 @@ export type EmptyShowtime = Omit<Showtime, '_id'> & {
   cinema_name: Showtime['cinema_name'] | undefined
   room_id: Showtime['room_id'] | undefined
   room_name: Showtime['room_name'] | undefined
-  opening_date: Showtime['opening_date'] | undefined
   showtime_detail: Showtime['showtime_detail'] | undefined
 }
 
@@ -22,6 +20,7 @@ export type ShowtimeDetail = {
   movie_name: string
   expected_start_date: Date | undefined
   expected_end_date: Date | undefined
+  booking_range_date: string
   movie_duration: number
   opening_date: Date | undefined // need to save into database => use type date
   opening_start_time: Date | undefined // only need hour and minute => use type date (ex: 20:15)

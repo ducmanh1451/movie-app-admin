@@ -34,6 +34,15 @@ const props = defineProps({
 })
 // compute totalPage
 const totalPages = computed(() => Math.ceil(props.pagination.total / props.pagination.perPage))
+
+// check row can be remove
+const checkCanDeleted = (showtime: any) => {
+  if (new Date(showtime['opening_date']) <= new Date()) {
+    alert('Lịch chiếu đã bắt đầu')
+    return
+  }
+  emits('delete', showtime as Showtime)
+}
 </script>
 
 <template>
@@ -57,8 +66,7 @@ const totalPages = computed(() => Math.ceil(props.pagination.total / props.pagin
           icon="mso-delete"
           color="danger"
           aria-label="Delete showtime"
-          :disabled="new Date(showtime['opening_date']) <= new Date()"
-          @click="emits('delete', showtime as Showtime)"
+          @click="checkCanDeleted(showtime)"
         />
       </div>
     </template>

@@ -209,10 +209,10 @@
     "actors": "Các diễn viên chính",
     "rating": "Đánh giá",
     "movieType": "Phân loại",
-    "expectedStartDate": "Ngày dự kiến bắt đầu",
-    "expectedEndDate": "Ngày dự kiến kết thúc",
+    "expectedStartDate": "Ngày dự kiến bắt đầu chiếu",
+    "expectedEndDate": "Ngày dự kiến kết thúc chiếu",
     "movieDuration": "Thời lượng phim",
-    "opening_date": "Ngày dự kiến mở bán",
+    "opening_date": "Ngày dự kiến mở bán vé",
     "opening_start_time": "Thời gian bắt đầu chiếu",
     "opening_end_time": "Thời gian kết thúc chiếu",
     "poster": "Poster",
@@ -248,6 +248,7 @@
     "popupUpdateTitle": "Chỉnh sửa lịch chiếu",
     "startDateTime": "Thời gian bắt đầu",
     "endDateTime": "Thời gian kết thúc",
-    "countShowtimeDetail": "Số lịch chiếu"
+    "countShowtimeDetail": "Số lịch chiếu",
+    "bookingRangeDate": "Khoảng thời gian có thể đặt vé"
   }
 }

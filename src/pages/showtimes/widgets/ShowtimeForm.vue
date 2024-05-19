@@ -24,8 +24,6 @@ defineEmits<{
 }>()
 // disabled selectbox when edit
 const isModeEdit = ref(false)
-// disabled button save when opening_date <= current_date
-const isAllowEdit = ref(false)
 
 // declare empty showtime
 const defaultNewShowtime: EmptyShowtime = {
@@ -33,7 +31,6 @@ const defaultNewShowtime: EmptyShowtime = {
   cinema_name: '',
   room_id: '',
   room_name: '',
-  opening_date: undefined,
   showtime_detail: [],
 }
 const newShowtime = ref({ ...defaultNewShowtime })
@@ -43,6 +40,7 @@ const showtimeDetail: ShowtimeDetail = {
   movie_name: '',
   expected_start_date: undefined,
   expected_end_date: undefined,
+  booking_range_date: '',
   movie_duration: 0,
   opening_date: undefined,
   opening_start_time: undefined,
@@ -132,6 +130,10 @@ const changeMovieOption = (movieId: string) => {
     newShowtimeDetail.value.movie_duration = selectedMovie['movie_duration']
     newShowtimeDetail.value.expected_start_date = selectedMovie['expected_start_date']
     newShowtimeDetail.value.expected_end_date = selectedMovie['expected_end_date']
+
+    newShowtimeDetail.value.booking_range_date = `${formatDateToDisplay(
+      subtractDate(newShowtimeDetail.value.expected_start_date, 3),
+    )} ~ ${formatDateToDisplay(newShowtimeDetail.value.expected_end_date)}`
   }
 }
 // click btn clear movie option
@@ -151,6 +153,7 @@ const columns = defineVaDataTableColumns([
   { label: t('movies.movieDuration'), key: 'movie_duration', thAlign: 'center', tdAlign: 'right' },
   { label: t('movies.expectedStartDate'), key: 'expected_start_date', thAlign: 'center', tdAlign: 'center' },
   { label: t('movies.expectedEndDate'), key: 'expected_end_date', thAlign: 'center', tdAlign: 'center' },
+  { label: t('showtimes.bookingRangeDate'), key: 'booking_range_date', thAlign: 'center', tdAlign: 'center' },
   { label: t('movies.opening_date'), key: 'opening_date', thAlign: 'center', tdAlign: 'center' },
   { label: t('movies.opening_start_time'), key: 'opening_start_time', thAlign: 'center', tdAlign: 'center' },
   { label: t('movies.opening_end_time'), key: 'opening_end_time', thAlign: 'center', tdAlign: 'center' },
@@ -203,7 +206,7 @@ const validateRowData = () => {
     newShowtimeDetail.value.expected_start_date != undefined &&
     newShowtimeDetail.value.opening_date < subtractDate(newShowtimeDetail.value.expected_start_date, 3)
   ) {
-    alert('Ngày dự kiến mở bán không được bé hơn ngày dự kiến bắt đầu')
+    alert('Ngày dự kiến mở bán vé phải thuộc khoảng thời gian có thể đặt vé')
     return false
   }
   // check expected opening date not < current
@@ -216,7 +219,7 @@ const validateRowData = () => {
     newShowtimeDetail.value.expected_end_date != undefined &&
     newShowtimeDetail.value.opening_date > newShowtimeDetail.value.expected_end_date
   ) {
-    alert('Ngày dự kiến mở bán không được lớn hơn ngày dự kiến kết thúc')
+    alert('Ngày dự kiến mở bán vé phải thuộc khoảng thời gian có thể đặt vé')
     return false
   }
   // check time
@@ -298,16 +301,10 @@ const checkExistsRowInTable = () => {
 }
 
 // click button delete row
-const deleteShowtimeDetail = (rowIndex: number) => {
-  items.splice(rowIndex, 1)
-}
-
-// check disabled button delete
-const disableButtonDeleteDetail = (rowData: any) => {
-  if (new Date(rowData['opening_start_time']) <= new Date()) {
-    return true
+const deleteShowtimeDetail = async (rowData: any, rowIndex: number) => {
+  if (isModeEdit.value == false) {
+    items.splice(rowIndex, 1)
   }
-  return false
 }
 
 // watch change item in popup
@@ -323,10 +320,6 @@ watch(
     }
 
     isModeEdit.value = true
-
-    if (newShowtime.value.opening_date != undefined && new Date(newShowtime.value.opening_date) <= new Date()) {
-      isAllowEdit.value = true
-    }
 
     await fetchDataMovieRooms(newShowtime.value.cinema_id)
 
@@ -411,6 +404,14 @@ watch(
                     :format-date="formatDateToDisplay"
                     disabled
                   />
+
+                  <VaInput
+                    v-if="column['key'] == 'booking_range_date'"
+                    v-model="newShowtimeDetail.booking_range_date"
+                    input-class="va-text-center"
+                    disabled
+                  />
+
                   <VaDateInput
                     v-if="column['key'] == 'opening_date'"
                     v-model="newShowtimeDetail.opening_date"
@@ -437,12 +438,18 @@ watch(
                 </td>
               </tr>
             </template>
-
             <template #cell(expected_start_date)="{ value }">
               {{ formatDateToDisplay(value) }}
             </template>
             <template #cell(expected_end_date)="{ value }">
               {{ formatDateToDisplay(value) }}
+            </template>
+
+            <template #cell(booking_range_date)="{ rowData }">
+              {{
+                `${formatDateToDisplay(subtractDate(rowData['expected_start_date'], 3))} ~
+              ${formatDateToDisplay(rowData['expected_end_date'])}`
+              }}
             </template>
             <template #cell(opening_date)="{ value }">
               {{ formatDateToDisplay(value) }}
@@ -453,16 +460,15 @@ watch(
             <template #cell(opening_end_time)="{ value }">
               {{ formatTimeToDisplay(value) }}
             </template>
-
-            <template #cell(actions)="{ rowData }">
+            <template #cell(actions)="{ rowData, rowIndex }">
               <VaButton
                 preset="primary"
                 size="small"
                 icon="mso-delete"
                 color="danger"
-                :disabled="disableButtonDeleteDetail(rowData)"
+                :disabled="isModeEdit"
                 aria-label="Delete showtime detail"
-                @click="deleteShowtimeDetail"
+                @click="deleteShowtimeDetail(rowData, rowIndex)"
               />
             </template>
           </VaDataTable>
@@ -475,7 +481,7 @@ watch(
           {{ t('common.buttonCancel') }}
         </VaButton>
         <VaButton
-          :disabled="isAllowEdit"
+          :disabled="isModeEdit"
           @click="validate() && checkExistsRowInTable() && $emit('save', newShowtime as Showtime)"
         >
           {{ t('common.buttonSave') }}
