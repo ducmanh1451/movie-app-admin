@@ -17,7 +17,7 @@
         {{ seat.seat_id }}
       </div>
     </div>
-    <div v-if="seats.length > 0" class="flex justify-center mt-4">
+    <div v-if="seats.length > 0 && props.moduleUse != 'booking'" class="flex justify-center mt-4">
       <div class="flex-col item">
         <VaSelect
           v-model="type"
@@ -61,6 +61,10 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  moduleUse: {
+    type: String,
+    default: 'movie_room',
+  },
 })
 // emits
 const emits = defineEmits(['updateSeats'])
@@ -101,6 +105,10 @@ const updateType = () => {
 onMounted(async () => {
   const response = await getLibrary(1)
   typeSeatOptions.value = response.library.lib_details
+  // if movieSeat component is used in booking => call generateSeats
+  if (props.moduleUse === 'booking') {
+    seats.value = generateSeats(props.rows as number, props.columns as number)
+  }
 })
 
 // Modal error

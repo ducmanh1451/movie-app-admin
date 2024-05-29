@@ -40,6 +40,8 @@ export const addShowtime = async (showtime: Omit<Showtime, '_id'>) => {
         room_id: data._id,
         room_name: data.room_name,
         seats: data.seats,
+        rows: data.rows,
+        columns: data.columns,
       }
     })
     await axios.post('http://localhost:8001/api/v1/booking/create', bookings)

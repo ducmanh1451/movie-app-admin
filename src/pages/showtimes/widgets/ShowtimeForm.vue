@@ -154,9 +154,9 @@ const columns = defineVaDataTableColumns([
   { label: t('movies.expectedStartDate'), key: 'expected_start_date', thAlign: 'center', tdAlign: 'center' },
   { label: t('movies.expectedEndDate'), key: 'expected_end_date', thAlign: 'center', tdAlign: 'center' },
   { label: t('showtimes.bookingRangeDate'), key: 'booking_range_date', thAlign: 'center', tdAlign: 'center' },
-  { label: t('movies.opening_date'), key: 'opening_date', thAlign: 'center', tdAlign: 'center' },
-  { label: t('movies.opening_start_time'), key: 'opening_start_time', thAlign: 'center', tdAlign: 'center' },
-  { label: t('movies.opening_end_time'), key: 'opening_end_time', thAlign: 'center', tdAlign: 'center' },
+  { label: t('movies.openingDate'), key: 'opening_date', thAlign: 'center', tdAlign: 'center' },
+  { label: t('movies.openingStartTime'), key: 'opening_start_time', thAlign: 'center', tdAlign: 'center' },
+  { label: t('movies.openingEndTime'), key: 'opening_end_time', thAlign: 'center', tdAlign: 'center' },
   { label: ' ', key: 'actions', thAlign: 'center', tdAlign: 'center' },
 ])
 
