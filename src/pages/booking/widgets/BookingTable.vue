@@ -49,13 +49,19 @@ const totalPages = computed(() => Math.ceil(props.pagination.total / props.pagin
       {{ formatDateToDisplay(value) }}
     </template>
     <template #cell(opening_date)="{ value }">
-      {{ formatDateToDisplay(value) }}
+      <div class="text-red-400">
+        {{ formatDateToDisplay(value) }}
+      </div>
     </template>
     <template #cell(opening_start_time)="{ value }">
-      {{ formatTimeToDisplay(value) }}
+      <div class="text-red-400">
+        {{ formatTimeToDisplay(value) }}
+      </div>
     </template>
     <template #cell(opening_end_time)="{ value }">
-      {{ formatTimeToDisplay(value) }}
+      <div class="text-red-400">
+        {{ formatTimeToDisplay(value) }}
+      </div>
     </template>
     <template #cell(actions)="{ rowData: booking }">
       <div class="flex gap-2 justify-end">
