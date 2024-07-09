@@ -24,6 +24,8 @@ defineEmits<{
 }>()
 // disabled selectbox when edit
 const isModeEdit = ref(false)
+// error
+const errorMessage = ref('')
 
 // declare empty showtime
 const defaultNewShowtime: EmptyShowtime = {
@@ -186,17 +188,17 @@ const addNewRow = () => {
 const validateRowData = () => {
   // check not exists selected movie
   if (newShowtimeDetail.value.movie_id === '') {
-    alert('Vui lòng chọn bộ phim')
+    errorMessage.value = 'Vui lòng chọn bộ phim'
     return false
   }
   // check not exists opening_date
   if (newShowtimeDetail.value.opening_date == undefined) {
-    alert('Ngày dự kiến mở bán không được để trống')
+    errorMessage.value = 'Ngày dự kiến mở bán không được để trống'
     return false
   }
   // check not exists opening_start_time
   if (newShowtimeDetail.value.opening_start_time == undefined) {
-    alert('Thời gian bắt đầu chiếu không được để trống')
+    errorMessage.value = 'Thời gian bắt đầu chiếu không được để trống'
     return false
   }
   // check the expected opening date within the allowed time period ̣(Open 3 days in advance)
@@ -206,12 +208,12 @@ const validateRowData = () => {
     newShowtimeDetail.value.expected_start_date != undefined &&
     newShowtimeDetail.value.opening_date < subtractDate(newShowtimeDetail.value.expected_start_date, 3)
   ) {
-    alert('Ngày dự kiến mở bán vé phải thuộc khoảng thời gian có thể đặt vé')
+    errorMessage.value = 'Ngày dự kiến mở bán vé phải thuộc khoảng thời gian có thể đặt vé'
     return false
   }
   // check expected opening date not < current
   if (newShowtimeDetail.value.opening_date != undefined && newShowtimeDetail.value.opening_date < new Date()) {
-    alert('Ngày dự kiến mở bán không được bé hơn hoặc bằng ngày hiện tại')
+    errorMessage.value = 'Ngày dự kiến mở bán không được bé hơn hoặc bằng ngày hiện tại'
     return false
   }
   if (
@@ -219,15 +221,40 @@ const validateRowData = () => {
     newShowtimeDetail.value.expected_end_date != undefined &&
     newShowtimeDetail.value.opening_date > newShowtimeDetail.value.expected_end_date
   ) {
-    alert('Ngày dự kiến mở bán vé phải thuộc khoảng thời gian có thể đặt vé')
+    errorMessage.value = 'Ngày dự kiến mở bán vé phải thuộc khoảng thời gian có thể đặt vé'
     return false
   }
-  // check time
-  if (!checkDuplicateShowtime()) {
-    alert('Trùng lặp giờ chiếu')
+  // check opening_date of each showtime must be the same day
+  if (!checkDateShowtime()) {
+    errorMessage.value = 'Ngày chiếu phải cùng một ngày'
     return false
   }
 
+  // check opening_start_time and opening_end_time don't overlap with previous showtimes
+  if (!checkDuplicateShowtime()) {
+    errorMessage.value = 'Trùng lặp giờ chiếu'
+    return false
+  }
+  errorMessage.value = ''
+  return true
+}
+
+// check date
+const checkDateShowtime = () => {
+  if (
+    newShowtimeDetail.value.opening_date === undefined ||
+    newShowtimeDetail.value.opening_start_time === undefined ||
+    newShowtimeDetail.value.opening_end_time === undefined
+  ) {
+    return false
+  }
+  const openingDate = new Date(newShowtimeDetail.value.opening_date)
+  if (items.length > 0) {
+    const checkDate = new Date(items[0].opening_date)
+    if (openingDate.getTime() != checkDate.getTime()) {
+      return false
+    }
+  }
   return true
 }
 
@@ -293,7 +320,7 @@ const checkDuplicateShowtime = () => {
 // validate must have min 1 row in table
 const checkExistsRowInTable = () => {
   if (items.length === 0) {
-    alert('Vui lòng thêm ít nhất một dòng vào bảng trước khi lưu.')
+    errorMessage.value = 'Vui lòng thêm ít nhất một dòng vào bảng trước khi lưu'
     return false
   }
   newShowtime.value.showtime_detail = items
@@ -330,6 +357,9 @@ watch(
 </script>
 
 <template>
+  <VaAlert v-if="errorMessage != ''" color="danger" icon="warning" class="mb-[10px]">
+    {{ errorMessage }}
+  </VaAlert>
   <VaForm v-slot="{ validate }" class="flex flex-col gap-2">
     <div class="row">
       <div class="flex flex-col md4">
