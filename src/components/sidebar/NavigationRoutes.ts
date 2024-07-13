@@ -20,14 +20,6 @@ export default {
       },
     },
     {
-      name: 'users',
-      displayName: 'menu.users',
-      meta: {
-        icon: 'group',
-      },
-    },
-    // custom
-    {
       name: 'movies',
       displayName: 'menu.movies',
       meta: {
@@ -79,39 +71,6 @@ export default {
         icon: 'confirmation_number',
       },
     },
-    // end
-
-    {
-      name: 'projects',
-      displayName: 'menu.projects',
-      meta: {
-        icon: 'folder_shared',
-      },
-    },
-    {
-      name: 'payments',
-      displayName: 'menu.payments',
-      meta: {
-        icon: 'credit_card',
-      },
-      children: [
-        {
-          name: 'payment-methods',
-          displayName: 'menu.payment-methods',
-          isNotDisplayed: false,
-        },
-        {
-          name: 'pricing-plans',
-          displayName: 'menu.pricing-plans',
-          isNotDisplayed: false,
-        },
-        {
-          name: 'billing',
-          displayName: 'menu.billing',
-          isNotDisplayed: false,
-        },
-      ],
-    },
     {
       name: 'auth',
       displayName: 'menu.auth',
@@ -135,35 +94,6 @@ export default {
           isNotDisplayed: false,
         },
       ],
-    },
-
-    {
-      name: 'faq',
-      displayName: 'menu.faq',
-      meta: {
-        icon: 'quiz',
-      },
-    },
-    {
-      name: '404',
-      displayName: 'menu.404',
-      meta: {
-        icon: 'vuestic-iconset-files',
-      },
-    },
-    {
-      name: 'preferences',
-      displayName: 'menu.preferences',
-      meta: {
-        icon: 'manage_accounts',
-      },
-    },
-    {
-      name: 'settings',
-      displayName: 'menu.settings',
-      meta: {
-        icon: 'settings',
-      },
     },
   ] as INavigationRoute[],
 }
