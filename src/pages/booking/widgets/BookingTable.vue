@@ -69,7 +69,7 @@ const totalPages = computed(() => Math.ceil(props.pagination.total / props.pagin
           preset="primary"
           size="small"
           color="primary"
-          icon="mso-edit"
+          icon="visibility"
           aria-label="Show booking detail"
           @click="emits('show', booking as Booking)"
         />
