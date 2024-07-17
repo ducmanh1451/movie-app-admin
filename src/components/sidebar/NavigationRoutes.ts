@@ -72,6 +72,13 @@ export default {
       },
     },
     {
+      name: 'media',
+      displayName: 'menu.media',
+      meta: {
+        icon: 'image',
+      },
+    },
+    {
       name: 'auth',
       displayName: 'menu.auth',
       meta: {
