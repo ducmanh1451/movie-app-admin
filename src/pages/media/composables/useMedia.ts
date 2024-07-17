@@ -4,7 +4,7 @@ import { ImageDisplay, ImageUpload, Pagination } from '../types'
 import { watchIgnorable } from '@vueuse/core'
 
 // default pagination
-const makePaginationRef = () => ref<Pagination>({ page: 1, perPage: 8, total: 0 })
+const makePaginationRef = () => ref<Pagination>({ page: 1, perPage: 14, total: 0 })
 
 // declare hook
 export const useImages = (options?: { pagination?: Ref<Pagination> }) => {

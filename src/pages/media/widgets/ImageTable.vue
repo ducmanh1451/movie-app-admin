@@ -88,21 +88,6 @@ watch(showModalUploadPreview, () => {
           <VaIcon name="download" color="#fff" />
         </div>
       </div>
-      <!-- <div class="list-images flex flex-wrap mt-3 w-[840px] min-h-[350px]">
-                <VaSkeleton v-if="props.loading" variant="squared" height="350px" />
-                <div v-if="props.images.length > 0 && !props.loading" v-for="image in props.images"
-                    class="item-image m-[5px] flex flex-col items-center gap-3">
-                    <div class="w-[200px] h-[300px] shadow-inner shadow-2xl">
-                        <img class="w-full h-full" :src="image.url" alt="">
-                    </div>
-                    <div class="bg-red-400 w-full flex justify-center py-[5px] text-gray-100">
-                        <input type="checkbox" class="w-[20px] h-[20px] mr-2 cursor-pointer" :name="image.key"
-                            :id="image.key" @change="toggleImageSelection($event, image.key)">
-                        <label :for="image.key" class="cursor-pointer">Xóa ảnh</label>
-                    </div>
-                </div>
-            </div> -->
-
       <VaSkeleton v-if="props.loading" variant="squared" height="350px" class="mt-3" />
       <div v-if="props.images.length > 0 && !props.loading" class="w-full flex flex-wrap mt-3 min-h-[350px]">
         <div
