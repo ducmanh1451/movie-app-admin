@@ -62,7 +62,8 @@
     "update-movie-room": "Chỉnh sửa phòng chiếu phim",
     "showtimes": "Lịch chiếu phim",
     "booking": "Đặt vé",
-    "projects": "Dự án"
+    "projects": "Dự án",
+    "media": "Ảnh và Video"
   },
   "messages": {
     "all": "Xem tất cả tin nhắn",
@@ -198,6 +199,9 @@
     "messageConfirmDelete": "Bạn muốn xóa bản ghi này ?",
     "messageDateGreaterCurrent": "Vui lòng chọn ngày lớn hơn ngày hiện tại.",
     "messageDateToGreaterDateFrom": "Vui lòng chọn ngày kết thúc lớn hơn ngày bắt đầu.",
+    "messageUploadImageSuccess": "Tải ảnh lên thành công!",
+    "messageErrorDeleteImage": "Vui lòng chọn ảnh!",
+    "messageDeleteImagesSuccess": "Xóa ảnh thành công!",
     "confirm": "Xác nhận",
     "buttonDelete": "Xóa"
   },
@@ -254,5 +258,10 @@
   "bookings": {
     "pageTitle": "Đặt vé",
     "popupDetailTitle": "Thông tin chi tiết"
+  },
+  "media": {
+    "pageTitle": "Ảnh và Video",
+    "popupUploadImageTitle": "Ảnh",
+    "popupUploadVideoTitle": "Video"
   }
 }

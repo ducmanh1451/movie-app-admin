@@ -64,6 +64,11 @@ const routes: Array<RouteRecordRaw> = [
         path: 'booking',
         component: () => import('../pages/booking/BookingPage.vue'),
       },
+      {
+        name: 'media',
+        path: 'media',
+        component: () => import('../pages/media/MediaPage.vue'),
+      },
     ],
   },
   {
