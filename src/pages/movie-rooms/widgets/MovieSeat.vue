@@ -1,22 +1,22 @@
 <template>
   <div class="container">
     <div v-if="seats.length > 0" class="screen"></div>
-    <div class="seat-container" :style="{ '--column': columns }" loading="true">
+    <div
+      class="seat-container"
+      :class="{ 'module-booking': props.moduleUse == 'booking', 'module-movie-room': props.moduleUse != 'booking' }"
+      :style="{ '--column': columns }"
+      loading="true"
+    >
       <div
         v-for="(seat, index) in seats"
         :key="index"
-        :class="{
-          seat: true,
-          standard: seat.type === 1,
-          vip: seat.type === 2,
-          disabled: seat.type === 3,
-          checked: seat.checked,
-        }"
-        @click="checkSeat(seat)"
+        :class="computedSeatClass(seat)"
+        @click="props.moduleUse != 'booking' ? checkSeat(seat) : showCustomerInfo(seat)"
       >
-        {{ seat.seat_id }}
+        {{ String.fromCharCode(64 + seat.row) }}{{ seat.column }}
       </div>
     </div>
+    <!-- moduleUse == movie-room -->
     <div v-if="seats.length > 0 && props.moduleUse != 'booking'" class="flex justify-center mt-4">
       <div class="flex-col item">
         <VaSelect
@@ -29,6 +29,14 @@
       </div>
       <div class="flex justify-end flex-col item">
         <VaButton @click="validateAndProceed()"> {{ t('movieRooms.buttonSelectType') }} </VaButton>
+      </div>
+    </div>
+    <!-- moduleUse == booking -->
+    <div v-if="props.moduleUse == 'booking'" class="flex flex-col items-center mt-3">
+      <div class="customer-info">
+        <div><strong>Tên khách hàng: </strong>{{ customer?.customer_name }}</div>
+        <div><strong>Email: </strong>{{ customer?.email }}</div>
+        <div><strong>Trạng thái: </strong>{{ customer?.payment_status == true ? 'Đã thanh toán' : '' }}</div>
       </div>
     </div>
     <VaModal v-model="showErrorModal" hide-default-actions size="auto">
@@ -44,6 +52,7 @@
 import { ref, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { getLibrary } from '../../../helpers/libraries'
+import { MovieRoomSeat } from '../types'
 
 // language
 const { t } = useI18n()
@@ -63,44 +72,34 @@ const props = defineProps({
   },
   moduleUse: {
     type: String,
-    default: 'movie_room',
+    default: 'movie-room',
   },
 })
 // emits
 const emits = defineEmits(['updateSeats'])
 // checkbox
 const typeSeatOptions = ref([])
-
+// customer info
+const customer = ref<{ customer_id: string; customer_name: string; email: string; payment_status: boolean }>({
+  customer_id: '',
+  customer_name: '',
+  email: '',
+  payment_status: false,
+})
+const prevSelectedSeatId = ref<number>(0)
 const type = ref()
 const updateType = () => {
   const selectedTypeValue = type.value
   const selectedOption = typeSeatOptions.value.find((option: any) => option.seat_type_cd === selectedTypeValue)
   const selectedOptionPrice = selectedOption ? selectedOption['seat_price'] : typeSeatOptions.value[0]['seat_price']
-  const selectedSeats = seats.value.filter((seat) => seat.checked)
+  const selectedSeats = seats.value.filter((seat) => !seat.available)
   selectedSeats.forEach((seat) => {
     seat.type = selectedTypeValue
-    seat.checked = false
+    seat.available = true
     seat.price = selectedOptionPrice
   })
-
-  // updateSeatNames()
-  // console.log(seats.value);
   emits('updateSeats', seats.value)
 }
-
-// const updateSeatNames = () => {
-//   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-//   seats.value.forEach((seat, index) => {
-//     if (seat.type === 3) { // Nếu là ghế bị vô hiệu hóa
-//       seat.seat_name = ''; // Đặt tên của ghế là trống
-//     } else { // Nếu không, đặt tên theo yêu cầu
-//       const rowChar = alphabet.charAt(seat.row-1); // Lấy kí tự tương ứng với hàng
-//       const seatNumber = seat.column; // Số ghế là số cột + 1
-//       seat.seat_name = rowChar + seatNumber; // Đặt tên của ghế
-//     }
-//   });
-// };
-
 // get seat type from database
 onMounted(async () => {
   const response = await getLibrary(1)
@@ -117,7 +116,7 @@ const showErrorModal = ref(false)
 // Hàm kiểm tra và tiến hành
 const validateAndProceed = () => {
   // Kiểm tra xem đã chọn type và đã check ít nhất một seat chưa
-  if (!type.value || !seats.value.some((seat) => seat.checked)) {
+  if (!type.value || !seats.value.some((seat) => seat.available)) {
     // Hiển thị modal thông báo lỗi
     showErrorModal.value = true
   } else {
@@ -137,18 +136,6 @@ const generateSeats = (rows: number, columns: number) => {
   }
   // if mode is create
   if (rows > 0 && rows < 13 && columns > 0 && columns < 13) {
-    // const totalSeats = rows * columns
-    // for (let i = 0; i < totalSeats; i++) {
-    //   seatsArray.push({
-    //     seat_id: i + 1,
-    //     seat_name: '',
-    //     // selected: false,
-    //     type: 1, // gồm các loại: standard, vip, disable
-    //     checked: false,
-    //     available: true,
-    //     price: typeSeatOptions.value[0]['seat_price'],
-    //   })
-    // }
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < columns; col++) {
         const seat_id = row * columns + col + 1
@@ -158,7 +145,6 @@ const generateSeats = (rows: number, columns: number) => {
           row: row + 1,
           column: col + 1,
           type: 1, // gồm các loại: standard, vip, disable
-          checked: false,
           available: true,
           price: typeSeatOptions.value[0]['seat_price'],
         })
@@ -172,6 +158,28 @@ const generateSeats = (rows: number, columns: number) => {
 // init
 const seats = ref<Array<any>>([])
 
+// computed
+const computedSeatClass = (seat: MovieRoomSeat) => {
+  let seatClass: string = 'seat '
+  // make class by type
+  if (seat.type == 1) {
+    seatClass += 'seat-standard '
+  } else if (seat.type == 2) {
+    seatClass += 'seat-vip '
+  } else if (seat.type == 3) {
+    seatClass += 'not-display '
+  }
+  // check by booking (module booking)
+  if (seat.booking && props.moduleUse == 'booking') {
+    seatClass += 'booking '
+  }
+  // make class by available
+  if (!seat.available) {
+    seatClass += 'selecting '
+  }
+  return seatClass
+}
+
 // watch
 watch([() => props.rows as number, () => props.columns as number], () => {
   seats.value = generateSeats(props.rows as number, props.columns as number)
@@ -179,7 +187,29 @@ watch([() => props.rows as number, () => props.columns as number], () => {
 
 // click seat
 const checkSeat = (seat: any) => {
-  seat.checked = !seat.checked
+  seat.available = !seat.available
+}
+const showCustomerInfo = (seat: any) => {
+  if (seat.type === 3) {
+    return
+  }
+  if (prevSelectedSeatId.value != 0) {
+    const selectedSeat = seats.value.find((seat) => seat.seat_id == prevSelectedSeatId.value)
+    selectedSeat.available = true
+  }
+  if (seat.customer != undefined) {
+    customer.value.customer_id = seat.customer.customer_id
+    customer.value.customer_name = seat.customer.customer_name
+    customer.value.email = seat.customer.email
+    customer.value.payment_status = seat.customer.payment_status
+  } else {
+    customer.value.customer_id = ''
+    customer.value.customer_name = ''
+    customer.value.email = ''
+    customer.value.payment_status = false
+  }
+  seat.available = !seat.available
+  prevSelectedSeatId.value = seat.seat_id
 }
 </script>
 
@@ -207,29 +237,42 @@ const checkSeat = (seat: any) => {
   width: 30px;
   height: 30px;
   background-color: #fff;
-  border-radius: 5px;
+  border: 1px solid #ccc;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-content: center;
   align-items: center;
   font-size: small;
-  color: #fff;
 }
 
-.seat.standard {
-  background-color: green;
+.seat.seat-standard {
+  border-color: #01c73c;
 }
 
-.seat.vip {
-  background-color: purple;
+.seat.seat-vip {
+  border-color: #f71708;
 }
 
-.seat.disabled {
+.seat-container.module-movie-room .seat.not-display,
+.seat-container.module-booking .seat.not-display {
   background-color: gainsboro;
 }
 
-.seat.checked {
-  background-color: #b11500;
+.seat-container.module-booking .seat.not-display {
+  cursor: not-allowed;
+  opacity: 0.3;
+}
+
+.seat-container.module-booking .seat.booking {
+  border-color: #bbb;
+  background-color: #bbb;
+  color: #fff;
+}
+
+.seat.selecting {
+  background-color: #6ed9d9 !important;
+  border-color: #6ed9d9 !important;
+  color: #000 !important;
 }
 </style>
