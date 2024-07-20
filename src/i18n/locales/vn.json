@@ -63,7 +63,7 @@
     "showtimes": "Lịch chiếu phim",
     "booking": "Đặt vé",
     "projects": "Dự án",
-    "media": "Ảnh và Video"
+    "media": "Ảnh"
   },
   "messages": {
     "all": "Xem tất cả tin nhắn",
@@ -220,6 +220,7 @@
     "openingStartTime": "Thời gian bắt đầu chiếu",
     "openingEndTime": "Thời gian kết thúc chiếu",
     "poster": "Poster",
+    "trailer": "Trailer",
     "content": "Nội dung",
     "showingMovie": "Phim đang chiếu",
     "upcomingMovie": "Phim sắp chiếu",
@@ -260,7 +261,7 @@
     "popupDetailTitle": "Thông tin chi tiết"
   },
   "media": {
-    "pageTitle": "Ảnh và Video",
+    "pageTitle": "Ảnh",
     "popupUploadImageTitle": "Ảnh",
     "popupUploadVideoTitle": "Video"
   }

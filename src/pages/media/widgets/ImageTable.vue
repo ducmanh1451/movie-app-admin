@@ -19,16 +19,22 @@ const props = defineProps({
     type: Object as PropType<Pagination>,
     required: true,
   },
+  isModeImport: {
+    type: Boolean,
+    default: false,
+  },
 })
+
 // computed totalPage
 const totalPages = computed(() => Math.ceil(props.pagination.total / props.pagination.perPage))
 // vars
 const files = ref<any[]>([])
 const showModalUploadPreview = ref<boolean>(false)
-const selectedImages = ref<string[]>([])
+const deletedImages = ref<string[]>([])
+const importedImage = ref<string | null>(null)
 
 // emits
-const emits = defineEmits(['add', 'reload', 'delete'])
+const emits = defineEmits(['add', 'reload', 'delete', 'import'])
 
 // funcs
 const uploadImages = () => {
@@ -37,21 +43,40 @@ const uploadImages = () => {
 const reloadImages = () => {
   emits('reload')
 }
-const toggleImageSelection = (event: Event, key: string) => {
+const deleteImages = () => {
+  emits('delete', deletedImages.value)
+}
+const chooseImagesDelete = (event: Event, key: string) => {
   const target = event.target as HTMLInputElement
   if (target.checked) {
-    if (!selectedImages.value.includes(key)) {
-      selectedImages.value.push(key)
+    if (!deletedImages.value.includes(key)) {
+      deletedImages.value.push(key)
     }
   } else {
-    const index = selectedImages.value.indexOf(key)
+    const index = deletedImages.value.indexOf(key)
     if (index !== -1) {
-      selectedImages.value.splice(index, 1)
+      deletedImages.value.splice(index, 1)
     }
   }
 }
-const deleteImages = () => {
-  emits('delete', selectedImages.value)
+const importImage = () => {
+  emits('import', importedImage.value)
+}
+const chooseImageImport = (event: Event, url: string) => {
+  const target = event.target as HTMLInputElement
+  if (target.checked) {
+    props.images.forEach((image) => {
+      if (image.url !== url) {
+        const checkbox = document.getElementById(image.url) as HTMLInputElement
+        if (checkbox) {
+          checkbox.checked = false
+        }
+      }
+    })
+    importedImage.value = url
+  } else {
+    importedImage.value = null
+  }
 }
 watch(showModalUploadPreview, () => {
   if (!showModalUploadPreview.value) {
@@ -65,25 +90,30 @@ watch(showModalUploadPreview, () => {
     <div class="container flex flex-col justity-center items-center">
       <div class="list-funcs flex justify-center gap-3">
         <div
+          v-if="!props.isModeImport"
           class="item flex items-center justify-center border border-solid border-blue-700 bg-blue-700 hover:bg-blue-800 cursor-pointer w-[40px] h-[40px]"
           @click="deleteImages"
         >
           <VaIcon name="delete" color="#fff" />
         </div>
         <div
+          v-if="!props.isModeImport"
           class="item flex items-center justify-center border border-solid border-blue-700 bg-blue-700 hover:bg-blue-800 cursor-pointer w-[40px] h-[40px]"
           @click="uploadImages"
         >
           <VaIcon name="upload" color="#fff" />
         </div>
         <div
+          v-if="!props.isModeImport"
           class="item flex items-center justify-center border border-solid border-blue-700 bg-blue-700 hover:bg-blue-800 cursor-pointer w-[40px] h-[40px]"
           @click="reloadImages"
         >
           <VaIcon name="autorenew" color="#fff" />
         </div>
         <div
+          v-if="props.isModeImport"
           class="item flex items-center justify-center border border-solid border-blue-700 bg-blue-700 hover:bg-blue-800 cursor-pointer w-[40px] h-[40px]"
+          @click="importImage"
         >
           <VaIcon name="download" color="#fff" />
         </div>
@@ -98,15 +128,25 @@ watch(showModalUploadPreview, () => {
           <div class="w-[200px] h-[300px] shadow-inner shadow-2xl">
             <img class="w-full h-full" :src="image.url" alt="" />
           </div>
-          <div class="bg-red-400 w-full flex justify-center py-[5px] text-gray-100">
+          <div v-if="!props.isModeImport" class="bg-red-400 w-full flex justify-center py-[5px] text-gray-100">
             <input
               :id="image.key"
               type="checkbox"
               class="w-[20px] h-[20px] mr-2 cursor-pointer"
               :name="image.key"
-              @change="toggleImageSelection($event, image.key)"
+              @change="chooseImagesDelete($event, image.key)"
             />
             <label :for="image.key" class="cursor-pointer">Xóa ảnh</label>
+          </div>
+          <div v-if="props.isModeImport" class="bg-blue-400 w-full flex justify-center py-[5px] text-gray-100">
+            <input
+              :id="image.key"
+              type="checkbox"
+              class="w-[20px] h-[20px] mr-2 cursor-pointer"
+              :name="image.key"
+              @change="chooseImageImport($event, image.url)"
+            />
+            <label :for="image.key" class="cursor-pointer">Chọn ảnh</label>
           </div>
         </div>
       </div>

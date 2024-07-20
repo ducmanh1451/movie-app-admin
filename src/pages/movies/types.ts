@@ -10,6 +10,7 @@ export type Movie = {
   expected_end_date: Date
   movie_duration: number
   poster: string
+  trailer: string
   content: string
 }
 
@@ -24,6 +25,7 @@ export type EmptyMovie = Omit<Movie, '_id'> & {
   expected_end_date: Movie['expected_end_date'] | undefined
   movie_duration: Movie['movie_duration'] | undefined
   poster: Movie['poster'] | undefined
+  trailer: Movie['trailer'] | undefined
   content: Movie['content'] | undefined
 }
 
