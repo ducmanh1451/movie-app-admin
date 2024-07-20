@@ -4,9 +4,15 @@ import { EmptyMovie, Movie } from '../types'
 import { useI18n } from 'vue-i18n'
 import { getLibrary } from '../../../helpers/libraries'
 import { formatDateToDisplay } from '../../../helpers/date'
+import ImageTable from '../../media/widgets/ImageTable.vue'
+import { useImages } from '../../media/composables/useMedia'
+// import { ImageDisplay, Pagination } from '../../media/types'
 
 // language
 const { t } = useI18n()
+// hook
+const { isLoading, images, pagination } = useImages()
+
 // data selectbox genre
 const genreOptions = ref([])
 // init data for selectbox genre
@@ -31,6 +37,9 @@ defineEmits<{
 }>()
 // declare empty movie
 const maxVisibleOptions = 1
+const showModalImportImage = ref<boolean>(false)
+const config = { defaultSize: 'large', sizes: { large: 1600 } }
+
 const disabledStartDate = ref(false)
 const defaultStartDate = new Date()
 defaultStartDate.setDate(defaultStartDate.getDate())
@@ -48,6 +57,7 @@ const defaultNewMovie: EmptyMovie = {
   expected_end_date: defaultEndDate,
   movie_duration: 0,
   poster: '',
+  trailer: '',
   content: '',
 }
 
@@ -84,6 +94,25 @@ watch(
   },
   { immediate: true },
 )
+
+// watch(
+//   () => showModalImportImage.value,
+//   async (newValue) => {
+//     if (newValue) {
+//       const { isLoading, images, pagination } = await useImages()
+//       isLoadingPopup.value = isLoading.value
+//       imagesPopup.value = images.value
+//       paginationPopup.value = pagination.value
+//       console.log(images);
+//     }
+//   },
+//   { immediate: true },
+// )
+
+const importImage = (image: string) => {
+  newMovie.value.poster = image
+  showModalImportImage.value = false
+}
 
 // validate
 const requiredString = (v: string) => !!v || t('common.messageRequired')
@@ -201,7 +230,21 @@ const ruleEndDate = (expected_end_date: any) => {
     <div class="row">
       <div class="flex flex-col md12">
         <div class="item">
-          <VaInput v-model="newMovie.poster" :label="t('movies.poster')" />
+          <VaInput v-model="newMovie.poster" :label="t('movies.poster')" disabled />
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="flex flex-col md12">
+        <div class="item">
+          <VaButton @click="showModalImportImage = !showModalImportImage"> Chọn ảnh </VaButton>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="flex flex-col md12">
+        <div class="item">
+          <VaInput v-model="newMovie.trailer" :label="t('movies.trailer')" />
         </div>
       </div>
     </div>
@@ -221,6 +264,24 @@ const ruleEndDate = (expected_end_date: any) => {
       </div>
     </div>
   </VaForm>
+  <VaModal
+    v-model="showModalImportImage"
+    size="large"
+    mobile-fullscreen
+    stateful
+    hide-default-actions
+    :sizes-config="config"
+    max-height="700px"
+  >
+    <h1 class="va-h5 mb-4">Chọn ảnh</h1>
+    <ImageTable
+      v-model:pagination="pagination"
+      :images="images"
+      :loading="isLoading"
+      is-mode-import
+      @import="importImage"
+    />
+  </VaModal>
 </template>
 
 <style lang="scss" scoped>

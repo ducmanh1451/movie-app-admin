@@ -78,14 +78,4 @@ const deleteImages = async (images: string[]) => {
       />
     </VaCollapse>
   </VaCard>
-
-  <!-- <VaCard>
-        <VaCardContent>
-            <VaButton @click="toggleModalUploadVideo">Upload Video</VaButton>
-        </VaCardContent>
-        <VaModal v-slot="{ cancel, ok }" v-model="showModalUploadVideo" size="large" mobile-fullscreen stateful
-            hide-default-actions max-height="550px">
-            <h1 class="va-h5 mb-4">{{ t('media.popupUploadVideoTitle') }}</h1>
-        </VaModal>
-    </VaCard> -->
 </template>
