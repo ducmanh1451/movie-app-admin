@@ -20,7 +20,7 @@
                 size="20px"
                 :color="iconColor(route)"
               />
-              <VaSidebarItemTitle class="flex justify-between items-center leading-5 font-semibold">
+              <VaSidebarItemTitle class="flex justify-between items-center leading-5 font-semibold text-[15px]">
                 {{ t(route.displayName) }}
                 <VaIcon v-if="route.children" :name="arrowDirection(isCollapsed)" size="20px" />
               </VaSidebarItemTitle>
