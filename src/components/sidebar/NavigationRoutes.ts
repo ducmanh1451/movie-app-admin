@@ -33,30 +33,46 @@ export default {
         icon: 'theaters',
       },
     },
+    // test
     {
       name: 'movie-rooms',
       displayName: 'menu.movie-rooms',
       meta: {
         icon: 'meeting_room',
       },
-      children: [
-        {
-          name: 'list-movie-rooms',
-          displayName: 'menu.list-movie-rooms',
-          isNotDisplayed: false,
-        },
-        {
-          name: 'create-movie-room',
-          displayName: 'menu.create-movie-room',
-          isNotDisplayed: false,
-        },
-        {
-          name: 'update-movie-room',
-          displayName: 'menu.update-movie-room',
-          isNotDisplayed: true,
-        },
-      ],
     },
+    {
+      name: 'create-movie-rooms',
+      displayName: 'menu.create-movie-room',
+      meta: {
+        icon: 'meeting_room',
+      },
+    },
+    // test
+    // {
+    //   name: 'movie-rooms',
+    //   displayName: 'menu.movie-rooms',
+    //   meta: {
+    //     icon: 'meeting_room',
+    //   },
+    //   children: [
+    //     {
+    //       name: 'list-movie-rooms',
+    //       displayName: 'menu.list-movie-rooms',
+    //       isNotDisplayed: false,
+    //     },
+    //     {
+    //       name: 'create-movie-room',
+    //       displayName: 'menu.create-movie-room',
+    //       isNotDisplayed: false,
+    //     },
+    //     {
+    //       name: 'update-movie-room',
+    //       displayName: 'menu.update-movie-room',
+    //       isNotDisplayed: true,
+    //     },
+    //   ],
+    // },
     {
       name: 'showtimes',
       displayName: 'menu.showtimes',

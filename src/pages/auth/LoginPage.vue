@@ -1,16 +1,23 @@
 <template>
   <VaForm ref="form" @submit.prevent="submit">
-    <h1 class="font-semibold text-4xl mb-4">Log in</h1>
-    <p class="text-base mb-4 leading-5">
+    <h1 class="font-semibold text-4xl mb-4">Đăng nhập</h1>
+    <!-- <p class="text-base mb-4 leading-5">
       New to Vuestic?
       <RouterLink :to="{ name: 'signup' }" class="font-semibold text-primary">Sign up</RouterLink>
-    </p>
-    <VaInput
+    </p> -->
+    <!-- <VaInput
       v-model="formData.email"
       :rules="[validators.required, validators.email]"
       class="mb-4"
       label="Email"
       type="email"
+    /> -->
+    <VaInput
+      v-model="formData.user_id"
+      :rules="[validators.required]"
+      class="mb-4"
+      label="Tên đăng nhập"
+      type="user_id"
     />
     <VaValue v-slot="isPasswordVisible" :default-value="false">
       <VaInput
@@ -31,15 +38,15 @@
       </VaInput>
     </VaValue>
 
-    <div class="auth-layout__options flex flex-col sm:flex-row items-start sm:items-center justify-between">
+    <!-- <div class="auth-layout__options flex flex-col sm:flex-row items-start sm:items-center justify-between">
       <VaCheckbox v-model="formData.keepLoggedIn" class="mb-2 sm:mb-0" label="Keep me signed in on this device" />
       <RouterLink :to="{ name: 'recover-password' }" class="mt-2 sm:mt-0 sm:ml-1 font-semibold text-primary">
         Forgot password?
       </RouterLink>
-    </div>
+    </div> -->
 
     <div class="flex justify-center mt-4">
-      <VaButton class="w-full" @click="submit"> Login</VaButton>
+      <VaButton class="w-full" @click="submit">Đăng nhập</VaButton>
     </div>
   </VaForm>
 </template>
@@ -55,7 +62,8 @@ const { push } = useRouter()
 const { init } = useToast()
 
 const formData = reactive({
-  email: '',
+  // email: '',
+  user_id: '',
   password: '',
   keepLoggedIn: false,
 })

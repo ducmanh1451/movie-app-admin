@@ -21,15 +21,22 @@
     >
       {{ t('helpAndSupport') }}
     </VaButton> -->
-    <NotificationDropdown class="app-navbar-actions__item" />
+    <!-- <NotificationDropdown class="app-navbar-actions__item" /> -->
     <!-- <ProfileDropdown class="app-navbar-actions__item app-navbar-actions__item--profile mr-1" /> -->
+
+    <div class="p-3 mr-2 rounded hover:bg-gray-300 transition-all duration-300 cursor-pointer flex items-center">
+      <VaIcon name="person" size="22px" />
+      <span class="mx-2">Manh Manh Manh Manh</span>
+    </div>
+    <div class="p-3 mr-2 rounded hover:bg-gray-300 transition-all duration-300 cursor-pointer">
+      <VaIcon name="logout" size="22px" />
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 // import ProfileDropdown from './dropdowns/ProfileDropdown.vue'
-import NotificationDropdown from './dropdowns/NotificationDropdown.vue'
-// import GithubButton from './GitHubButton.vue'
+// import NotificationDropdown from './dropdowns/NotificationDropdown.vue'
 
 defineProps({
   isMobile: { type: Boolean, default: false },

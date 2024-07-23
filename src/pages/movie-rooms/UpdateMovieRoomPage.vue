@@ -5,14 +5,15 @@ import { useMovieRooms } from './composables/useMovieRooms'
 import MovieSeat from '../movie-rooms/widgets/MovieSeat.vue'
 import { MovieRoom } from './types'
 import { useToast } from 'vuestic-ui'
-import { useRoute, useRouter } from 'vue-router'
+// import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 
 // language
 const { t } = useI18n()
 // hook
 const { find, update } = useMovieRooms()
 // router
-const router = useRouter()
+// const router = useRouter()
 // declare
 const movieRoom = ref<MovieRoom>({
   _id: '',
@@ -67,9 +68,9 @@ const saveMovieRoom = async () => {
       message: t('common.messageUpdateSuccess'),
       color: 'success',
     })
-    setTimeout(() => {
-      router.push('/movie-rooms/list-movie-rooms')
-    }, 3000)
+    // setTimeout(() => {
+    //   router.push('/movie-rooms/list-movie-rooms')
+    // }, 3000)
   } catch (error) {
     console.error('Error fetching genre data:', error)
   }

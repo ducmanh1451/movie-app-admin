@@ -17,7 +17,8 @@ const { confirm } = useModal()
 const { init: notify } = useToast()
 // click btn edit
 const editMovieRoom = (movieRoom: MovieRoom) => {
-  router.push(`/movie-rooms/update-movie-room/${movieRoom._id}`)
+  // router.push(`/movie-rooms/update-movie-room/${movieRoom._id}`)
+  router.push(`/movie-rooms/update/${movieRoom._id}`)
 }
 // click btn delete
 const onMovieRoomDeleted = async (movieRoom: MovieRoom) => {
