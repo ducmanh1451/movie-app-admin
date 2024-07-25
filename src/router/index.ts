@@ -147,6 +147,11 @@ const routes: Array<RouteRecordRaw> = [
         path: 'media',
         component: () => import('../pages/media/MediaPage.vue'),
       },
+      {
+        name: 'staffs',
+        path: 'staffs',
+        component: () => import('../pages/staffs/StaffsPage.vue'),
+      },
     ],
   },
   {

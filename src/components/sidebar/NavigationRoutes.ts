@@ -95,6 +95,14 @@ export default {
       },
     },
     {
+      name: 'staffs',
+      displayName: 'menu.staffs',
+      meta: {
+        icon: 'group',
+      },
+    },
+
+    {
       name: 'auth',
       displayName: 'menu.auth',
       meta: {

@@ -63,7 +63,8 @@
     "showtimes": "Lịch chiếu phim",
     "booking": "Đặt vé",
     "projects": "Dự án",
-    "media": "Ảnh"
+    "media": "Ảnh",
+    "staffs": "Nhân viên"
   },
   "messages": {
     "all": "Xem tất cả tin nhắn",
@@ -196,6 +197,7 @@
     "messageErrorSystem": "Lỗi hệ thống!",
     "messageRequired": "Trường này bắt buộc nhập",
     "messageValidatePhoneNumber": "Không đúng định dạng",
+    "messageValidateEmail": "Email không đúng định dạng",
     "messageConfirmDelete": "Bạn muốn xóa bản ghi này ?",
     "messageDateGreaterCurrent": "Vui lòng chọn ngày lớn hơn ngày hiện tại.",
     "messageDateToGreaterDateFrom": "Vui lòng chọn ngày kết thúc lớn hơn ngày bắt đầu.",
@@ -264,5 +266,19 @@
     "pageTitle": "Ảnh",
     "popupUploadImageTitle": "Ảnh",
     "popupUploadVideoTitle": "Video"
+  },
+  "staffs": {
+    "pageTitle": "Nhân viên",
+    "popupCreateTitle": "Thêm mới nhân viên",
+    "popupUpdateTitle": "Chỉnh sửa nhân viên",
+    "user_id": "Mã nhân viên",
+    "user_name": "Tên nhân viên",
+    "authority": "Chức vụ",
+    "belong_cinema": "Nơi làm việc",
+    "gender": "Giới tính",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "phone_number": "Số điện thoại",
+    "address": "Địa chỉ"
   }
 }
