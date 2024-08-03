@@ -6,6 +6,8 @@ import { ref } from 'vue'
 import { Movie } from './types'
 import MovieForm from './widgets/MovieForm.vue'
 import { useModal, useToast } from 'vuestic-ui'
+import { getDetailAuthorization } from '../../middlewares/auth'
+import { useAuthStore } from '../../stores/auth-store'
 
 // language
 const { t } = useI18n()
@@ -19,7 +21,16 @@ const showModal = ref(false)
 const { init: notify } = useToast()
 // modal confirm
 const { confirm } = useModal()
-
+// auth store
+const authStore = useAuthStore()
+// check permission
+const permissions: string[] | undefined = getDetailAuthorization('movies', authStore.staffData.authority)
+const permissionEdit = ref<boolean>(true)
+if (!permissions?.includes('edit')) {
+  permissionEdit.value = false
+}
+// show or edit
+const isShow = ref<boolean>(false)
 // click btn create movie
 const createNewMovie = () => {
   movieToEdit.value = null
@@ -29,6 +40,13 @@ const createNewMovie = () => {
 const editMovie = (movie: Movie) => {
   movieToEdit.value = movie
   showModal.value = true
+  isShow.value = false
+}
+// click btn show
+const showMovie = (movie: Movie) => {
+  movieToEdit.value = movie
+  showModal.value = true
+  isShow.value = true
 }
 // click btn delete
 const onMovieDeleted = async (movie: Movie) => {
@@ -86,12 +104,14 @@ const onMovieSaved = async (movie: Movie) => {
     <VaCardContent>
       <div class="flex flex-col md:flex-row gap-2 mb-2 justify-between">
         <div class="flex flex-col md:flex-row gap-2 justify-start"></div>
-        <VaButton icon="add" @click="createNewMovie">{{ t('common.buttonCreateNew') }}</VaButton>
+        <VaButton v-if="permissionEdit" icon="add" @click="createNewMovie">{{ t('common.buttonCreateNew') }}</VaButton>
       </div>
       <MovieTable
         v-model:pagination="pagination"
         :movies="movies"
         :loading="isLoading"
+        :permission-edit="permissionEdit"
+        @show="showMovie"
         @edit="editMovie"
         @delete="onMovieDeleted"
       />
@@ -110,6 +130,7 @@ const onMovieSaved = async (movie: Movie) => {
       <h1 v-else class="va-h5 mb-4">{{ t('movies.popupUpdateTitle') }}</h1>
       <MovieForm
         :movie="movieToEdit"
+        :is-show="isShow"
         @close="cancel"
         @save="
           (movie) => {

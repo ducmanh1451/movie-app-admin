@@ -17,8 +17,10 @@ const { confirm } = useModal()
 const { init: notify } = useToast()
 // click btn edit
 const editMovieRoom = (movieRoom: MovieRoom) => {
-  // router.push(`/movie-rooms/update-movie-room/${movieRoom._id}`)
   router.push(`/movie-rooms/update/${movieRoom._id}`)
+}
+const showMovieRoom = (movieRoom: MovieRoom) => {
+  router.push(`/movie-rooms/${movieRoom._id}`)
 }
 // click btn delete
 const onMovieRoomDeleted = async (movieRoom: MovieRoom) => {
@@ -51,6 +53,7 @@ const onMovieRoomDeleted = async (movieRoom: MovieRoom) => {
         v-model:pagination="pagination"
         :movie-rooms="movieRooms"
         :loading="isLoading"
+        @show="showMovieRoom"
         @edit="editMovieRoom"
         @delete="onMovieRoomDeleted"
       />

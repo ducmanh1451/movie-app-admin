@@ -1,31 +1,14 @@
 <template>
-  <VaForm ref="form" @submit.prevent="submit">
-    <h1 class="font-semibold text-4xl mb-4">Đăng nhập</h1>
-    <!-- <p class="text-base mb-4 leading-5">
-      New to Vuestic?
-      <RouterLink :to="{ name: 'signup' }" class="font-semibold text-primary">Sign up</RouterLink>
-    </p> -->
-    <!-- <VaInput
-      v-model="formData.email"
-      :rules="[validators.required, validators.email]"
-      class="mb-4"
-      label="Email"
-      type="email"
-    /> -->
-    <VaInput
-      v-model="formData.user_id"
-      :rules="[validators.required]"
-      class="mb-4"
-      label="Tên đăng nhập"
-      type="user_id"
-    />
+  <VaForm ref="form" class="bg-gray-100 p-5" @submit.prevent="submit">
+    <h1 class="font-semibold text-4xl mb-4">{{ t('auth.login') }}</h1>
+    <VaInput v-model="formData.user_id" :rules="[required]" class="mb-4" :label="t('auth.userId')" type="user_id" />
     <VaValue v-slot="isPasswordVisible" :default-value="false">
       <VaInput
         v-model="formData.password"
-        :rules="[validators.required]"
+        :rules="[required]"
         :type="isPasswordVisible.value ? 'text' : 'password'"
         class="mb-4"
-        label="Password"
+        :label="t('auth.password')"
         @clickAppendInner.stop="isPasswordVisible.value = !isPasswordVisible.value"
       >
         <template #appendInner>
@@ -37,16 +20,8 @@
         </template>
       </VaInput>
     </VaValue>
-
-    <!-- <div class="auth-layout__options flex flex-col sm:flex-row items-start sm:items-center justify-between">
-      <VaCheckbox v-model="formData.keepLoggedIn" class="mb-2 sm:mb-0" label="Keep me signed in on this device" />
-      <RouterLink :to="{ name: 'recover-password' }" class="mt-2 sm:mt-0 sm:ml-1 font-semibold text-primary">
-        Forgot password?
-      </RouterLink>
-    </div> -->
-
     <div class="flex justify-center mt-4">
-      <VaButton class="w-full" @click="submit">Đăng nhập</VaButton>
+      <VaButton class="w-full" @click="submit">{{ t('auth.login') }}</VaButton>
     </div>
   </VaForm>
 </template>
@@ -55,23 +30,39 @@
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useForm, useToast } from 'vuestic-ui'
-import { validators } from '../../services/utils'
+import { useValidators } from '../../services/validators'
+import { useAuth } from './composables/useAuth'
+import { LoginForm } from './types'
+import { useAuthStore } from '../../stores/auth-store'
+import { useI18n } from 'vue-i18n'
 
+// vars
+const { required } = useValidators()
 const { validate } = useForm('form')
+const authStore = useAuthStore()
 const { push } = useRouter()
 const { init } = useToast()
-
 const formData = reactive({
-  // email: '',
   user_id: '',
   password: '',
-  keepLoggedIn: false,
 })
-
-const submit = () => {
+const { login } = useAuth()
+const { t } = useI18n()
+// funcs
+const submit = async () => {
   if (validate()) {
-    init({ message: "You've successfully logged in", color: 'success' })
-    push({ name: 'dashboard' })
+    try {
+      const response = await login(formData as LoginForm)
+      if (response.status == 200) {
+        authStore.login(response.data.payload, response.data.accessToken, response.data.refreshToken)
+        // go to home page after login success
+        init({ message: t('common.messageLoginSuccess'), color: 'success' })
+        push({ name: 'dashboard' })
+      }
+    } catch (error: any) {
+      const errorMsg = error.response.data.error
+      init({ message: errorMsg, color: 'danger' })
+    }
   }
 }
 </script>

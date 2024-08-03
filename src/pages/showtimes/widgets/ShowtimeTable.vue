@@ -16,7 +16,7 @@ const columns = defineVaDataTableColumns([
   { label: ' ', key: 'actions' },
 ])
 // emits
-const emits = defineEmits(['edit', 'delete'])
+const emits = defineEmits(['show', 'edit', 'delete'])
 // props
 const props = defineProps({
   showtimes: {
@@ -30,6 +30,9 @@ const props = defineProps({
   pagination: {
     type: Object as PropType<Pagination>,
     required: true,
+  },
+  permissionEdit: {
+    type: Boolean,
   },
 })
 // compute totalPage
@@ -56,11 +59,21 @@ const checkCanDeleted = (showtime: any) => {
           preset="primary"
           size="small"
           color="primary"
+          icon="visibility"
+          aria-label="Show showtime"
+          @click="emits('show', showtime as Showtime)"
+        />
+        <VaButton
+          v-if="props.permissionEdit"
+          preset="primary"
+          size="small"
+          color="primary"
           icon="mso-edit"
           aria-label="Edit showtime"
           @click="emits('edit', showtime as Showtime)"
         />
         <VaButton
+          v-if="props.permissionEdit"
           preset="primary"
           size="small"
           icon="mso-delete"

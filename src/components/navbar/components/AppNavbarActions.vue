@@ -26,9 +26,9 @@
 
     <div class="p-3 mr-2 rounded hover:bg-gray-300 transition-all duration-300 cursor-pointer flex items-center">
       <VaIcon name="person" size="22px" />
-      <span class="mx-2">Manh Manh Manh Manh</span>
+      <span class="mx-2">{{ authStore.staffData.user_name }}</span>
     </div>
-    <div class="p-3 mr-2 rounded hover:bg-gray-300 transition-all duration-300 cursor-pointer">
+    <div class="p-3 mr-2 rounded hover:bg-gray-300 transition-all duration-300 cursor-pointer" @click="logout">
       <VaIcon name="logout" size="22px" />
     </div>
   </div>
@@ -37,13 +37,22 @@
 <script lang="ts" setup>
 // import ProfileDropdown from './dropdowns/ProfileDropdown.vue'
 // import NotificationDropdown from './dropdowns/NotificationDropdown.vue'
+import { useAuthStore } from '../../../stores/auth-store'
+import { useRouter } from 'vue-router'
 
+// props
 defineProps({
   isMobile: { type: Boolean, default: false },
 })
-
-// import { useI18n } from 'vue-i18n'
-// const { t } = useI18n()
+// vars
+const authStore = useAuthStore()
+const { push } = useRouter()
+// funcs
+const logout = () => {
+  authStore.logout()
+  // go to home page after logout success
+  push({ name: 'login' })
+}
 </script>
 
 <style lang="scss">

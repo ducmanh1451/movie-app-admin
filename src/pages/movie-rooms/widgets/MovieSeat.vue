@@ -17,7 +17,7 @@
       </div>
     </div>
     <!-- moduleUse == movie-room -->
-    <div v-if="seats.length > 0 && props.moduleUse != 'booking'" class="flex justify-center mt-4">
+    <div v-if="seats.length > 0 && props.moduleUse == 'movie-room'" class="flex justify-center mt-4">
       <div class="flex-col item">
         <VaSelect
           v-model="type"

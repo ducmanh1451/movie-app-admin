@@ -1,7 +1,7 @@
 // src/stores/cards.ts
 
 import { defineStore } from 'pinia'
-import { sleep } from '../services/utils'
+import { sleep } from '../services/validators'
 import { PaymentSystemType, PaymentCard } from '../pages/payments/types' // adjust the import path accordingly
 
 // Simulated fetch function

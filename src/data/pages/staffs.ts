@@ -1,10 +1,13 @@
 import axios from 'axios'
 import { Staff, EmptyStaff, Pagination } from '../../pages/staffs/types'
+import { useAuthStore } from '../../stores/auth-store'
 
+const authStore = useAuthStore()
+const userId = authStore.staffData.user_id ?? ''
 // get staffs by page number
 export const getStaffs = async (options: Pagination) => {
   try {
-    const response = await axios.get(`http://localhost:8003/api/v1/staff`)
+    const response = await axios.get(`http://localhost:8003/api/v1/staff/${userId}`)
     const data = response.data.payload
     const normalizedStaffs = data.slice((options.page - 1) * options.perPage, options.page * options.perPage)
     const totalRecord = data.length

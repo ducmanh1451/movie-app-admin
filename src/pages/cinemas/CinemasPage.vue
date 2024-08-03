@@ -6,6 +6,8 @@ import { ref } from 'vue'
 import { Cinema } from './types'
 import CinemaForm from './widgets/CinemaForm.vue'
 import { useModal, useToast } from 'vuestic-ui'
+import { getDetailAuthorization } from '../../middlewares/auth'
+import { useAuthStore } from '../../stores/auth-store'
 
 // language
 const { t } = useI18n()
@@ -19,7 +21,16 @@ const showModal = ref(false)
 const { init: notify } = useToast()
 // modal confirm
 const { confirm } = useModal()
-
+// auth store
+const authStore = useAuthStore()
+// check permission
+const permissions: string[] | undefined = getDetailAuthorization('cinemas', authStore.staffData.authority)
+const permissionEdit = ref<boolean>(true)
+if (!permissions?.includes('edit')) {
+  permissionEdit.value = false
+}
+// show or edit
+const isShow = ref<boolean>(false)
 // click btn create cinema
 const createNewCinema = () => {
   cinemaToEdit.value = null
@@ -29,6 +40,13 @@ const createNewCinema = () => {
 const editCinema = (cinema: Cinema) => {
   cinemaToEdit.value = cinema
   showModal.value = true
+  isShow.value = false
+}
+// click btn show
+const showCinema = (cinema: Cinema) => {
+  cinemaToEdit.value = cinema
+  showModal.value = true
+  isShow.value = true
 }
 // click btn delete
 const onCinemaDeleted = async (cinema: Cinema) => {
@@ -85,12 +103,14 @@ const onCinemaSaved = async (cinema: Cinema) => {
     <VaCardContent>
       <div class="flex flex-col md:flex-row gap-2 mb-2 justify-between">
         <div class="flex flex-col md:flex-row gap-2 justify-start"></div>
-        <VaButton icon="add" @click="createNewCinema">{{ t('common.buttonCreateNew') }}</VaButton>
+        <VaButton v-if="permissionEdit" icon="add" @click="createNewCinema">{{ t('common.buttonCreateNew') }}</VaButton>
       </div>
       <CinemaTable
         v-model:pagination="pagination"
         :cinemas="cinemas"
         :loading="isLoading"
+        :permission-edit="permissionEdit"
+        @show="showCinema"
         @edit="editCinema"
         @delete="onCinemaDeleted"
       />
@@ -109,6 +129,7 @@ const onCinemaSaved = async (cinema: Cinema) => {
       <h1 v-else class="va-h5 mb-4">{{ t('cinemas.popupUpdateTitle') }}</h1>
       <CinemaForm
         :cinema="cinemaToEdit"
+        :is-show="isShow"
         @close="cancel"
         @save="
           (cinema) => {

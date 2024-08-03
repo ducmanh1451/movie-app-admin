@@ -4,6 +4,7 @@ import { EmptyStaff, Staff } from '../types'
 import { useI18n } from 'vue-i18n'
 import { getLibrary } from '../../../helpers/libraries'
 import axios from 'axios'
+import { useAuthStore } from '../../../stores/auth-store'
 
 // language
 const { t } = useI18n()
@@ -11,6 +12,9 @@ const { t } = useI18n()
 const props = defineProps<{
   staff: Staff | null
 }>()
+// auth store
+const authStore = useAuthStore()
+const authority = authStore.staffData.authority ?? 3
 // emits
 defineEmits<{
   (event: 'save', staff: Staff): void
@@ -33,16 +37,46 @@ const genderOptions = [
 // init data for selectbox genre
 onMounted(async () => {
   const response = await getLibrary(3)
-  authorityOptions.value = response.library.lib_details.map((item: any) => ({
+  const auths = response.library.lib_details.map((item: any) => ({
     text: item.authority_nm,
     value: item.authority_cd,
   }))
+  if (authority == 1) {
+    //admin
+    if (props.staff?.authority == 1) {
+      authorityOptions.value = auths.filter((option: any) => option.value === 1)
+    } else {
+      authorityOptions.value = auths.filter((option: any) => option.value === 2 || option.value === 3)
+    }
+  } else if (authority == 2) {
+    //manager
+    if (props.staff?.authority == 2) {
+      authorityOptions.value = auths.filter((option: any) => option.value === 2)
+    }
+    if (props.staff?.authority == 3 || props.staff?.authority == undefined) {
+      authorityOptions.value = auths.filter((option: any) => option.value === 3)
+    }
+  } else if (authority == 3) {
+    //staff
+    authorityOptions.value = auths.filter((option: any) => option.value === 3)
+  }
+
   // fetch data cinema
-  const cinemas = await axios.get(`http://localhost:8000/api/v1/cinema`)
-  cinemasOptions.value = cinemas.data.payload.map((cinema: any) => ({
+  const responseCinema = await axios.get(`http://localhost:8000/api/v1/cinema`)
+  const cinemas = responseCinema.data.payload.map((cinema: any) => ({
     text: cinema.cinema_name,
     value: cinema._id,
   }))
+  if (authority == 1) {
+    //admin
+    cinemasOptions.value = cinemas
+  } else if (authority == 2) {
+    //manager
+    cinemasOptions.value = cinemas.filter((option: any) => option.value === authStore.staffData.belong_cinema)
+  } else {
+    //staff
+    cinemasOptions.value = cinemas.filter((option: any) => option.value === authStore.staffData.belong_cinema)
+  }
 })
 
 // declare empty staff
@@ -125,6 +159,7 @@ const validateEmail = (email: string): string | boolean => {
             v-model="newStaff.authority"
             :label="t('staffs.authority')"
             :options="authorityOptions"
+            :disabled="authority == 3"
             value-by="value"
             text-by="text"
             required-mark
@@ -139,6 +174,7 @@ const validateEmail = (email: string): string | boolean => {
             v-model="newStaff.belong_cinema"
             :label="t('staffs.belong_cinema')"
             :options="cinemasOptions"
+            :disabled="authority == 3"
             :rules="[required]"
             value-by="value"
             text-by="text"

@@ -6,6 +6,8 @@ import { ref } from 'vue'
 import { Staff } from './types'
 import StaffForm from './widgets/StaffForm.vue'
 import { useModal, useToast } from 'vuestic-ui'
+import { getDetailAuthorization } from '../../middlewares/auth'
+import { useAuthStore } from '../../stores/auth-store'
 
 // language
 const { t } = useI18n()
@@ -20,6 +22,18 @@ const showModal = ref(false)
 const { init: notify } = useToast()
 // modal confirm
 const { confirm } = useModal()
+// auth store
+const authStore = useAuthStore()
+// check permission
+const permissions: string[] | undefined = getDetailAuthorization('staffs', authStore.staffData.authority)
+const permissionRemove = ref<boolean>(true)
+if (!permissions?.includes('remove')) {
+  permissionRemove.value = false
+}
+const permissionCreate = ref<boolean>(true)
+if (!permissions?.includes('create')) {
+  permissionCreate.value = false
+}
 
 // click btn create staff
 const createNewStaff = () => {
@@ -86,12 +100,15 @@ const onStaffSaved = async (staff: Staff) => {
     <VaCardContent>
       <div class="flex flex-col md:flex-row gap-2 mb-2 justify-between">
         <div class="flex flex-col md:flex-row gap-2 justify-start"></div>
-        <VaButton icon="add" @click="createNewStaff">{{ t('common.buttonCreateNew') }}</VaButton>
+        <VaButton v-if="permissionCreate" icon="add" @click="createNewStaff">{{
+          t('common.buttonCreateNew')
+        }}</VaButton>
       </div>
       <StaffTable
         v-model:pagination="pagination"
         :staffs="staffs"
         :loading="isLoading"
+        :permission-remove="permissionRemove"
         @edit="editStaff"
         @delete="onStaffDeleted"
       />
