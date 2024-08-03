@@ -4,7 +4,8 @@ import AuthLayout from '../layouts/AuthLayout.vue'
 import AppLayout from '../layouts/AppLayout.vue'
 
 // import RouteViewComponent from '../layouts/RouterBypass.vue'
-import { isAuthenticated, hasPermission } from '../middlewares/auth'
+// import { isAuthenticated, hasPermission } from '../middlewares/auth'
+import { Authentication } from '../middlewares/auth'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -81,76 +82,67 @@ const routes: Array<RouteRecordRaw> = [
         name: 'dashboard',
         path: 'dashboard',
         component: () => import('../pages/admin/dashboard/Dashboard.vue'),
+        beforeEnter: Authentication,
       },
       {
         name: 'movies',
         path: 'movies',
         component: () => import('../pages/movies/MoviesPage.vue'),
-        // meta: { requiresAuth: true },
+        beforeEnter: Authentication,
       },
       {
         name: 'cinemas',
         path: 'cinemas',
         component: () => import('../pages/cinemas/CinemasPage.vue'),
+        beforeEnter: Authentication,
       },
-      // test
       {
         name: 'movie-rooms',
         path: 'movie-rooms',
         component: () => import('../pages/movie-rooms/MovieRoomsPage.vue'),
+        beforeEnter: Authentication,
       },
       {
         name: 'create-movie-rooms',
         path: 'movie-rooms/create',
         component: () => import('../pages/movie-rooms/CreateMovieRoomPage.vue'),
+        beforeEnter: Authentication,
       },
       {
         name: 'update-movie-room',
         path: 'movie-rooms/update/:_id',
         component: () => import('../pages/movie-rooms/UpdateMovieRoomPage.vue'),
+        beforeEnter: Authentication,
       },
-      // test
-      // {
-      //   name: 'movie-rooms',
-      //   path: '/movie-rooms',
-      //   // component: RouteViewComponent,
-      //   children: [
-      //     {
-      //       name: 'list-movie-rooms',
-      //       path: 'list-movie-rooms',
-      //       component: () => import('../pages/movie-rooms/MovieRoomsPage.vue'),
-      //     },
-      //     {
-      //       name: 'create-movie-room',
-      //       path: 'create-movie-room',
-      //       component: () => import('../pages/movie-rooms/CreateMovieRoomPage.vue'),
-      //     },
-      //     {
-      //       name: 'update-movie-room',
-      //       path: 'update-movie-room/:_id',
-      //       component: () => import('../pages/movie-rooms/UpdateMovieRoomPage.vue'),
-      //     },
-      //   ],
-      // },
+      {
+        name: 'detail-movie-room',
+        path: 'movie-rooms/:_id',
+        component: () => import('../pages/movie-rooms/DetailMovieRoomPage.vue'),
+        beforeEnter: Authentication,
+      },
       {
         name: 'showtimes',
         path: 'showtimes',
         component: () => import('../pages/showtimes/ShowtimesPage.vue'),
+        beforeEnter: Authentication,
       },
       {
         name: 'booking',
         path: 'booking',
         component: () => import('../pages/booking/BookingPage.vue'),
+        beforeEnter: Authentication,
       },
       {
         name: 'media',
         path: 'media',
         component: () => import('../pages/media/MediaPage.vue'),
+        beforeEnter: Authentication,
       },
       {
         name: 'staffs',
         path: 'staffs',
         component: () => import('../pages/staffs/StaffsPage.vue'),
+        beforeEnter: Authentication,
       },
     ],
   },
@@ -184,6 +176,16 @@ const routes: Array<RouteRecordRaw> = [
       },
     ],
   },
+  {
+    path: '/errors',
+    children: [
+      {
+        name: '403',
+        path: '403',
+        component: () => import('../pages/errors/403Page.vue'),
+      },
+    ],
+  },
 ]
 
 const router = createRouter({
@@ -202,16 +204,16 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth && !isAuthenticated()) {
-    // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
-    next({ name: 'login' })
-  } else if (to.meta.permissions && !hasPermission(to)) {
-    // Chuyển hướng đến trang không có quyền truy cập nếu không có quyền
-    next({ name: 'dashboard' })
-  } else {
-    next()
-  }
-})
+// router.beforeEach((to, from, next) => {
+//   if (to.meta.requiresAuth && !isAuthenticated()) {
+//     // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+//     next({ name: 'login' })
+//   } else if (to.meta.permissions && !hasPermission(to)) {
+//     // Chuyển hướng đến trang không có quyền truy cập nếu không có quyền
+//     next({ name: 'dashboard' })
+//   } else {
+//     next()
+//   }
+// })
 
 export default router

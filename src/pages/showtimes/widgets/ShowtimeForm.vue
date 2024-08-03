@@ -16,7 +16,9 @@ const { t } = useI18n()
 // props
 const props = defineProps<{
   showtime: Showtime | null
+  isShow: boolean
 }>()
+
 // emits
 defineEmits<{
   (event: 'save', showtime: Showtime): void
@@ -462,7 +464,13 @@ watch(
                     class="w-28"
                     disabled
                   />
-                  <VaButton v-if="column['key'] == 'actions'" block input-class="va-text-center" @click="addNewRow">
+                  <VaButton
+                    v-if="column['key'] == 'actions'"
+                    :disabled="props.isShow || isModeEdit"
+                    block
+                    input-class="va-text-center"
+                    @click="addNewRow"
+                  >
                     {{ t('common.buttonCreateNew') }}
                   </VaButton>
                 </td>

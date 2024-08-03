@@ -16,7 +16,7 @@ const columns = defineVaDataTableColumns([
   { label: ' ', key: 'actions' },
 ])
 // emits
-const emits = defineEmits(['edit', 'delete'])
+const emits = defineEmits(['show', 'edit', 'delete'])
 // props
 const props = defineProps({
   cinemas: {
@@ -31,6 +31,9 @@ const props = defineProps({
     type: Object as PropType<Pagination>,
     required: true,
   },
+  permissionEdit: {
+    type: Boolean,
+  },
 })
 // compute totalPage
 const totalPages = computed(() => Math.ceil(props.pagination.total / props.pagination.perPage))
@@ -44,11 +47,21 @@ const totalPages = computed(() => Math.ceil(props.pagination.total / props.pagin
           preset="primary"
           size="small"
           color="primary"
+          icon="visibility"
+          aria-label="Show cinema"
+          @click="emits('show', cinema as Cinema)"
+        />
+        <VaButton
+          v-if="props.permissionEdit"
+          preset="primary"
+          size="small"
+          color="primary"
           icon="mso-edit"
           aria-label="Edit cinema"
           @click="emits('edit', cinema as Cinema)"
         />
         <VaButton
+          v-if="props.permissionEdit"
           preset="primary"
           size="small"
           icon="mso-delete"

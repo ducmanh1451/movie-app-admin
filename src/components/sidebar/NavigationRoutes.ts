@@ -33,7 +33,6 @@ export default {
         icon: 'theaters',
       },
     },
-    // test
     {
       name: 'movie-rooms',
       displayName: 'menu.movie-rooms',
@@ -48,31 +47,6 @@ export default {
         icon: 'meeting_room',
       },
     },
-    // test
-    // {
-    //   name: 'movie-rooms',
-    //   displayName: 'menu.movie-rooms',
-    //   meta: {
-    //     icon: 'meeting_room',
-    //   },
-    //   children: [
-    //     {
-    //       name: 'list-movie-rooms',
-    //       displayName: 'menu.list-movie-rooms',
-    //       isNotDisplayed: false,
-    //     },
-    //     {
-    //       name: 'create-movie-room',
-    //       displayName: 'menu.create-movie-room',
-    //       isNotDisplayed: false,
-    //     },
-    //     {
-    //       name: 'update-movie-room',
-    //       displayName: 'menu.update-movie-room',
-    //       isNotDisplayed: true,
-    //     },
-    //   ],
-    // },
     {
       name: 'showtimes',
       displayName: 'menu.showtimes',
@@ -101,30 +75,29 @@ export default {
         icon: 'group',
       },
     },
-
-    {
-      name: 'auth',
-      displayName: 'menu.auth',
-      meta: {
-        icon: 'login',
-      },
-      children: [
-        {
-          name: 'login',
-          displayName: 'menu.login',
-          isNotDisplayed: false,
-        },
-        {
-          name: 'signup',
-          displayName: 'menu.signup',
-          isNotDisplayed: false,
-        },
-        {
-          name: 'recover-password',
-          displayName: 'menu.recover-password',
-          isNotDisplayed: false,
-        },
-      ],
-    },
+    // {
+    //   name: 'auth',
+    //   displayName: 'menu.auth',
+    //   meta: {
+    //     icon: 'login',
+    //   },
+    //   children: [
+    //     {
+    //       name: 'login',
+    //       displayName: 'menu.login',
+    //       isNotDisplayed: false,
+    //     },
+    //     {
+    //       name: 'signup',
+    //       displayName: 'menu.signup',
+    //       isNotDisplayed: false,
+    //     },
+    //     {
+    //       name: 'recover-password',
+    //       displayName: 'menu.recover-password',
+    //       isNotDisplayed: false,
+    //     },
+    //   ],
+    // },
   ] as INavigationRoute[],
 }

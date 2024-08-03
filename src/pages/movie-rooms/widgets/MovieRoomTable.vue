@@ -1,9 +1,19 @@
 <script setup lang="ts">
 import { defineVaDataTableColumns } from 'vuestic-ui'
-import { PropType, computed } from 'vue'
+import { PropType, computed, ref } from 'vue'
 import { MovieRoom, Pagination } from '../types'
 import { useI18n } from 'vue-i18n'
+import { getDetailAuthorization } from '../../../middlewares/auth'
+import { useAuthStore } from '../../../stores/auth-store'
 
+// auth store
+const authStore = useAuthStore()
+// check permission
+const permissions: string[] | undefined = getDetailAuthorization('movie-rooms', authStore.staffData.authority)
+const permissionEdit = ref<boolean>(true)
+if (!permissions?.includes('edit')) {
+  permissionEdit.value = false
+}
 // language
 const { t } = useI18n()
 // define columns
@@ -15,7 +25,7 @@ const columns = defineVaDataTableColumns([
   { label: ' ', key: 'actions' },
 ])
 // emits
-const emits = defineEmits(['edit', 'delete'])
+const emits = defineEmits(['show', 'edit', 'delete'])
 // props
 const props = defineProps({
   movieRooms: {
@@ -43,11 +53,21 @@ const totalPages = computed(() => Math.ceil(props.pagination.total / props.pagin
           preset="primary"
           size="small"
           color="primary"
+          icon="visibility"
+          aria-label="Show movie room"
+          @click="emits('show', movieRoom as MovieRoom)"
+        />
+        <VaButton
+          v-if="permissionEdit"
+          preset="primary"
+          size="small"
+          color="primary"
           icon="mso-edit"
           aria-label="Edit movie room"
           @click="emits('edit', movieRoom as MovieRoom)"
         />
         <VaButton
+          v-if="permissionEdit"
           preset="primary"
           size="small"
           icon="mso-delete"

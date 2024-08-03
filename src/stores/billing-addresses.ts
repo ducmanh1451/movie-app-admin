@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { sleep } from '../services/utils'
+import { sleep } from '../services/validators'
 import { BillingAddress } from '../pages/payments/types' // adjust the import path accordingly
 
 // Simulated fetch function

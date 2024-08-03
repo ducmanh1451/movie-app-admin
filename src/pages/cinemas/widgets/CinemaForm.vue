@@ -8,6 +8,7 @@ const { t } = useI18n()
 // props
 const props = defineProps<{
   cinema: Cinema | null
+  isShow: boolean
 }>()
 // emits
 defineEmits<{
@@ -95,7 +96,9 @@ const validatePhoneNumber = (phoneNumber: string): string | boolean => {
         <VaButton preset="secondary" color="secondary" @click="$emit('close')">
           {{ t('common.buttonCancel') }}
         </VaButton>
-        <VaButton @click="validate() && $emit('save', newCinema as Cinema)"> {{ t('common.buttonSave') }} </VaButton>
+        <VaButton :disabled="props.isShow" @click="validate() && $emit('save', newCinema as Cinema)">
+          {{ t('common.buttonSave') }}
+        </VaButton>
       </div>
     </div>
   </VaForm>

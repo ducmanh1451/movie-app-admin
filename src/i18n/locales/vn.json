@@ -1,17 +1,4 @@
 {
-  "auth": {
-    "agree": "Tôi đồng ý với",
-    "createAccount": "Tạo tài khoản",
-    "createNewAccount": "Tạo Tài Khoản Mới",
-    "email": "Email",
-    "login": "Đăng nhập",
-    "password": "Mật khẩu",
-    "recover_password": "Khôi phục mật khẩu",
-    "sign_up": "Đăng ký",
-    "keep_logged_in": "Giữ tôi đăng nhập",
-    "termsOfUse": "Điều khoản sử dụng.",
-    "reset_password": "Đặt lại mật khẩu"
-  },
   "404": {
     "title": "Trang này đã biến mất.",
     "text": "Nếu bạn cảm thấy điều này không đúng, vui lòng gửi tin nhắn cho chúng tôi tại ",
@@ -60,6 +47,7 @@
     "list-movie-rooms": "Danh sách phòng chiếu phim",
     "create-movie-room": "Tạo phòng chiếu phim",
     "update-movie-room": "Chỉnh sửa phòng chiếu phim",
+    "detail-movie-room": "Chi  tiết phòng chiếu phim",
     "showtimes": "Lịch chiếu phim",
     "booking": "Đặt vé",
     "projects": "Dự án",
@@ -204,6 +192,7 @@
     "messageUploadImageSuccess": "Tải ảnh lên thành công!",
     "messageErrorDeleteImage": "Vui lòng chọn ảnh!",
     "messageDeleteImagesSuccess": "Xóa ảnh thành công!",
+    "messageLoginSuccess": "Đăng nhập thành công!",
     "confirm": "Xác nhận",
     "buttonDelete": "Xóa"
   },
@@ -253,6 +242,7 @@
     "pageTitle": "Lịch chiếu phim",
     "popupCreateTitle": "Thêm mới lịch chiếu",
     "popupUpdateTitle": "Chỉnh sửa lịch chiếu",
+    "popupDetailTitle": "Chi tiết lịch chiếu",
     "startDateTime": "Thời gian bắt đầu",
     "endDateTime": "Thời gian kết thúc",
     "countShowtimeDetail": "Số lịch chiếu",
@@ -280,5 +270,10 @@
     "password": "Mật khẩu",
     "phone_number": "Số điện thoại",
     "address": "Địa chỉ"
+  },
+  "auth": {
+    "login": "Đăng nhập",
+    "userId": "Tên đăng nhập",
+    "password": "Mật khẩu"
   }
 }

@@ -6,12 +6,13 @@ import { ref } from 'vue'
 import { Showtime } from './types'
 import ShowtimeForm from './widgets/ShowtimeForm.vue'
 import { useModal, useToast } from 'vuestic-ui'
+import { getDetailAuthorization } from '../../middlewares/auth'
+import { useAuthStore } from '../../stores/auth-store'
 
 // language
 const { t } = useI18n()
 // hook
 const { isLoading, showtimes, pagination, add, update, remove } = useShowtimes()
-
 // variable check mode create or update
 const showtimeToEdit = ref<Showtime | null>(null)
 // varable manage show/hide modal
@@ -20,7 +21,16 @@ const showModal = ref(false)
 const { init: notify } = useToast()
 // modal confirm
 const { confirm } = useModal()
-
+// auth store
+const authStore = useAuthStore()
+// check permission
+const permissions: string[] | undefined = getDetailAuthorization('showtimes', authStore.staffData.authority)
+const permissionEdit = ref<boolean>(true)
+if (!permissions?.includes('edit')) {
+  permissionEdit.value = false
+}
+// show or edit
+const isShow = ref<boolean>(false)
 // click btn create showtime
 const createNewShowtime = () => {
   showtimeToEdit.value = null
@@ -30,7 +40,13 @@ const createNewShowtime = () => {
 const editShowtime = (showtime: Showtime) => {
   showtimeToEdit.value = showtime
   showModal.value = true
-  // console.log(showtimeToEdit.value);
+  isShow.value = false
+}
+// click btn show
+const showShowtime = (showtime: Showtime) => {
+  showtimeToEdit.value = showtime
+  showModal.value = true
+  isShow.value = true
 }
 // click btn delete
 const onShowtimeDeleted = async (showtime: Showtime) => {
@@ -88,14 +104,18 @@ const onShowtimeSaved = async (showtime: Showtime) => {
     <VaCardContent>
       <div class="flex flex-col md:flex-row gap-2 mb-2 justify-between">
         <div class="flex flex-col md:flex-row gap-2 justify-start"></div>
-        <VaButton icon="add" @click="createNewShowtime">{{ t('common.buttonCreateNew') }}</VaButton>
+        <VaButton v-if="permissionEdit" icon="add" @click="createNewShowtime">{{
+          t('common.buttonCreateNew')
+        }}</VaButton>
       </div>
       <ShowtimeTable
         v-model:pagination="pagination"
         :showtimes="showtimes"
         :loading="isLoading"
+        :permission-edit="permissionEdit"
         @edit="editShowtime"
         @delete="onShowtimeDeleted"
+        @show="showShowtime"
       />
     </VaCardContent>
 
@@ -109,9 +129,11 @@ const onShowtimeSaved = async (showtime: Showtime) => {
       max-height="550px"
     >
       <h1 v-if="showtimeToEdit === null" class="va-h5 mb-4">{{ t('showtimes.popupCreateTitle') }}</h1>
+      <h1 v-else-if="isShow" class="va-h5 mb-4">{{ t('showtimes.popupDetailTitle') }}</h1>
       <h1 v-else class="va-h5 mb-4">{{ t('showtimes.popupUpdateTitle') }}</h1>
       <ShowtimeForm
         :showtime="showtimeToEdit"
+        :is-show="isShow"
         @close="cancel"
         @save="
           (showtime) => {

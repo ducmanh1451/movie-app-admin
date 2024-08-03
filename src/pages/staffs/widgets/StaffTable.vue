@@ -3,9 +3,13 @@ import { defineVaDataTableColumns } from 'vuestic-ui'
 import { PropType, computed } from 'vue'
 import { Staff, Pagination } from '../types'
 import { useI18n } from 'vue-i18n'
+import { useAuthStore } from '../../../stores/auth-store'
 
 // language
 const { t } = useI18n()
+// auth store
+const authStore = useAuthStore()
+const authority = authStore.staffData.authority
 // define columns
 const columns = defineVaDataTableColumns([
   { label: t('staffs.user_id'), key: 'user_id', thAlign: 'center', tdAlign: 'left' },
@@ -34,9 +38,25 @@ const props = defineProps({
     type: Object as PropType<Pagination>,
     required: true,
   },
+  permissionRemove: {
+    type: Boolean,
+  },
 })
-// compute totalPage
+// computed totalPage
 const totalPages = computed(() => Math.ceil(props.pagination.total / props.pagination.perPage))
+const displayButtonDelete = (staff: Staff) => {
+  let display = true
+  if (!props.permissionRemove) {
+    display = false
+  }
+  if (staff.authority == 2 && authority == 2) {
+    display = false
+  }
+  if (staff.authority == 1 && authority == 1) {
+    display = false
+  }
+  return display
+}
 </script>
 
 <template>
@@ -54,7 +74,7 @@ const totalPages = computed(() => Math.ceil(props.pagination.total / props.pagin
       {{ rowData.belong_cinema_name ?? '' }}
     </template>
     <template #cell(actions)="{ rowData: staff }">
-      <div class="flex gap-2 justify-end">
+      <div class="flex gap-2 justify-center">
         <VaButton
           preset="primary"
           size="small"
@@ -64,6 +84,7 @@ const totalPages = computed(() => Math.ceil(props.pagination.total / props.pagin
           @click="emits('edit', staff as Staff)"
         />
         <VaButton
+          v-if="displayButtonDelete(staff as Staff)"
           preset="primary"
           size="small"
           icon="mso-delete"

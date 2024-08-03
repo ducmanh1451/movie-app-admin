@@ -1,8 +1,8 @@
 <template>
   <VaSidebar v-model="writableVisible" :width="sidebarWidth" :color="color" minimized-width="0">
     <VaAccordion v-model="value" multiple>
-      <VaCollapse v-for="(route, index) in navigationRoutes.routes" :key="index">
-        <template #header="{ value: isCollapsed }">
+      <div v-for="(route, index) in routesCombined" :key="index">
+        <div>
           <VaSidebarItem
             :to="route.children ? undefined : { name: route.name }"
             :active="routeHasActiveChild(route)"
@@ -22,12 +22,28 @@
               />
               <VaSidebarItemTitle class="flex justify-between items-center leading-5 font-semibold text-[15px]">
                 {{ t(route.displayName) }}
+              </VaSidebarItemTitle>
+            </VaSidebarItemContent>
+          </VaSidebarItem>
+        </div>
+      </div>
+      <!-- <VaCollapse v-for="(route, index) in navigationRoutes.routes" :key="index">
+        <template #header="{ value: isCollapsed }">
+          <VaSidebarItem :to="route.children ? undefined : { name: route.name }" :active="routeHasActiveChild(route)"
+            :active-color="activeColor" :text-color="textColor(route)"
+            :aria-label="`${route.children ? 'Open category ' : 'Visit'} ${t(route.displayName)}`" role="button"
+            hover-opacity="0.10">
+            <VaSidebarItemContent class="py-3 pr-2 pl-4">
+              <VaIcon v-if="route.meta.icon" aria-hidden="true" :name="route.meta.icon" size="20px"
+                :color="iconColor(route)" />
+              <VaSidebarItemTitle class="flex justify-between items-center leading-5 font-semibold text-[15px]">
+                {{ t(route.displayName) }}
                 <VaIcon v-if="route.children" :name="arrowDirection(isCollapsed)" size="20px" />
               </VaSidebarItemTitle>
             </VaSidebarItemContent>
           </VaSidebarItem>
         </template>
-        <template #body>
+<template #body>
           <div v-for="(childRoute, index2) in route.children" :key="index2">
             <VaSidebarItem
               v-if="childRoute.isNotDisplayed != true"
@@ -46,18 +62,19 @@
             </VaSidebarItem>
           </div>
         </template>
-      </VaCollapse>
+</VaCollapse> -->
     </VaAccordion>
   </VaSidebar>
 </template>
+
 <script lang="ts">
 import { defineComponent, watch, ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
-
 import { useI18n } from 'vue-i18n'
 import { useColors } from 'vuestic-ui'
-
 import navigationRoutes, { type INavigationRoute } from './NavigationRoutes'
+import { Authorization } from '../../middlewares/auth'
+import { useAuthStore } from '../../stores/auth-store'
 
 export default defineComponent({
   name: 'Sidebar',
@@ -68,9 +85,20 @@ export default defineComponent({
   emits: ['update:visible'],
 
   setup: (props, { emit }) => {
+    const authStore = useAuthStore()
     const { getColor, colorToRgba } = useColors()
     const route = useRoute()
     const { t } = useI18n()
+
+    const permissions: any = Authorization(authStore.staffData.authority)
+
+    const routesCombined = permissions.map((permission: any) => {
+      const route = navigationRoutes.routes.find((route) => route.name === permission.screen)
+      return {
+        ...permission,
+        ...route,
+      }
+    })
 
     const value = ref<boolean[]>([])
 
@@ -109,6 +137,7 @@ export default defineComponent({
       color,
       activeColor,
       navigationRoutes,
+      routesCombined,
       routeHasActiveChild,
       isActiveChildRoute,
       t,

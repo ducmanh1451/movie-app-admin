@@ -29,6 +29,7 @@ const movieTypesOptions = [
 // props
 const props = defineProps<{
   movie: Movie | null
+  isShow: boolean
 }>()
 // emits
 defineEmits<{
@@ -215,14 +216,14 @@ const ruleEndDate = (expected_end_date: any) => {
       <div class="flex flex-col md12 actors">
         <div class="item">
           <VaInput v-model="actorName" class="input-type-actor" :label="t('movies.actors')" />
-          <VaButton class="button-add-actor" @click="addActor"> + </VaButton>
+          <VaButton :disabled="props.isShow" class="button-add-actor" @click="addActor"> + </VaButton>
         </div>
       </div>
       <div class="flex flex-col md12 actors-table">
         <div class="item">
           <div v-for="(actor, index) in newMovie.actors" :key="index" class="group">
             <VaInput v-model="newMovie.actors[index]" class="input-display-actor" />
-            <VaButton class="button-delete-actor" @click="removeActor(index)"> x </VaButton>
+            <VaButton :disabled="props.isShow" class="button-delete-actor" @click="removeActor(index)"> x </VaButton>
           </div>
         </div>
       </div>
@@ -237,7 +238,7 @@ const ruleEndDate = (expected_end_date: any) => {
     <div class="row">
       <div class="flex flex-col md12">
         <div class="item">
-          <VaButton @click="showModalImportImage = !showModalImportImage"> Chọn ảnh </VaButton>
+          <VaButton :disabled="props.isShow" @click="showModalImportImage = !showModalImportImage"> Chọn ảnh </VaButton>
         </div>
       </div>
     </div>
@@ -260,7 +261,9 @@ const ruleEndDate = (expected_end_date: any) => {
         <VaButton preset="secondary" color="secondary" @click="$emit('close')">
           {{ t('common.buttonCancel') }}
         </VaButton>
-        <VaButton @click="validate() && $emit('save', newMovie as Movie)"> {{ t('common.buttonSave') }} </VaButton>
+        <VaButton :disabled="props.isShow" @click="validate() && $emit('save', newMovie as Movie)">
+          {{ t('common.buttonSave') }}
+        </VaButton>
       </div>
     </div>
   </VaForm>
